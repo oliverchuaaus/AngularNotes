@@ -1,0 +1,170 @@
+What are the differences between AngularJS and Angular?
+a. Javascript vs Typescript 
+b. Controller and $scope based vs. Component Based
+c. Promise vs. Observables
+d. Two way binding vs One way binding
+
+ES5 vs ES6
+a. Classes
+b. Arrow Functions
+c. Modules
+d. Block Scoping via let
+e. Promises
+
+How to specify variable in backtick?
+`${my-var}`
+
+Fat arrow?
+(param1, param2) => { //some expr }
+function some-func(param1, param2){
+  //some expr
+}
+param1 => some-var;
+function some-func(param){
+  return some-var;
+}
+
+Built-in directives
+a. *ngIf="true"
+b. *ngSwitch="choice=='a'"
+c. *ngFor="let student of students;let i=index;"
+d. *ngStyle
+d. *ngClass
+
+Lifecycle:
+a. OnChanges
+b. OnInit
+c. OnCheck
+
+d. AfterContentInit		after init
+e. AfterContentChecked	after view
+f. AfterViewInit 		after child init
+g. AfterViewChecked		after child view
+
+h. OnDestroy
+
+
+How to specify Routes?
+a. In Module, define routes array with object: route, component, [guard]
+b. In Module, import RouterModule.forRoot(routes);
+c. In Module, add RouteGuard to provider 
+d. In Component, add routerLink and routerOutlet
+
+How root component is called?
+a. main.ts points to AppModule
+b. AppModule has a bootstrap Component
+c. index.html would have component tag
+
+Angular CLI commands:
+a. ng new my-new-app
+b. ng generate component my-component
+c. ng generate service my-service
+d. npm install
+e. npm start or ng serve
+f. ng build --target=production
+
+How to specify Component?
+a. selector
+b. templateURL
+c. [styleUrls]
+d. constructor
+e. variables, methods
+f. declare in declarations
+
+How to pass fields into child component?
+a. Parent Template:
+<child [myObject] = "myObject"></child> 
+a. Child Component:
+@Input() myObject:MyObject;
+
+How to emit events from Component?
+a. In Parent Component
+<child [itemList]="itemList" onItemClicked="itemSelected()">
+
+export class ParentComponent{
+	itemSelected(item){
+	}
+}	
+
+b. In Child Component
+<div *ngFor="let item of itemList">
+{{item}} <button (click="buttonClicked(item)")></button>
+</div>
+
+export Class ChildComponent{
+	@Input() itemList: Item[];
+	@Output() onItemClicked: EventEmitter<Item>;
+	...
+	buttonClicked(item:Item){
+		this.onItemClicked.emit(item);
+	}
+}
+How to specify Service?
+a. In Service class, @Injectable()
+b. In AppModule, declare service class in providers
+
+3 Types of Dependency Injection?
+a. Singleton	- providers: [UserService] IS SAME AS providers: [{provide:UserService, useClass:UserService}]
+b. Strings 		- constructor(@Inject ('API_URL') apiUrl:string)
+c. Factory		- providers: [{provide:UserService, useFactory(){ return new UserService(param)}]
+
+REST method calls?
+a. get(url);
+b. delete(url);
+c. head(url);
+d. post(url, json.stringify(body);
+e. put(url, json.stringify(body);
+f. patch(url, json.stringify(body); 
+
+this.http.get(url).subscribe(
+  (res:Response) =>{
+    this.data = res.json();
+  }	
+);
+
+
+Angular Forms?
+
+2 Form Usage?
+a. FormsModules			implicit creation of formControl
+b. ReactiveFormsModules	explicit creation of formControl
+
+2 Form Objects?
+a. FormControl - represents input field
+b. FormGroup - collection of FormControl 
+
+Template:
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
+	<input name="sku" ngModel />
+</form>	
+Component:
+onSubmit(formObject){
+  console.log(formObject);
+}	
+
+Template:
+<form [formGroup]="fg" (ngSubmit)="onSubmit(fg.value)">
+	<input [formControl]="fg.controls['sku']"/> 
+</form>
+Component:
+export class MyComponent{
+ fg:FormGroup;
+ constructor(fb:FormBuilder){
+  this.fg = fb.group({sku: ['ABC123']}); 
+ }
+ onSubmit(formControl){
+  console.log(formControl);
+ }	
+}
+
+Validation:
+How to declare validator for formControl:
+ this.fg = fb.group({
+  'sku':  ['', Validators.required]
+ });
+
+
+3rd party libraries used
+ngx-bootstrap
+ng2-upload
+ng2-table

@@ -1,0 +1,66 @@
+HTML5
+
+rich content with no plugins (flash)
+Cross Platform - tablets, PC etc.
+
+
+minimum:
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  </head>
+  <body>
+  </body
+</html>
+
+new features:
+a. canvas - 2D drawing
+b. video/audio playback
+c. support for local storage
+d. content-specific elements: article, footer, header, nav, section
+e. form controls: calendar, date, time, email, url, search
+
+
+Media Elements:
+audio
+video
+embed - define container for external apps (plugins)
+source - define source for audio/video
+track - define track for audio/video
+
+
+Input Types:
+a. color
+b. date
+c. email
+d. number
+e. range
+
+Form Elements:
+a. datalist
+<input list="cities">
+<datalist name="cities">
+  <option value="Manila">
+  <option value="Sydney">
+</datalist>
+b. output
+c. keygen
+
+Form Attributes:
+a. autocomplete
+b. autofocus - when loading
+c. form - if form element outside form tags
+d. formaction - multiple submits can go to different actions
+e. multiple - for email and file only
+f. pattern - pattern="[A-Za-z]{3}"
+g. placeholder - hint
+h. required 
+
+HTML5 APIs
+a. geolocation
+b. drag and drop
+c. web storage: localStorage, sessionStorage
+d. app cache - make js, images, css available online
+e. web worker: independent javascript thread

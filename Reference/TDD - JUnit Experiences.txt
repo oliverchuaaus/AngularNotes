@@ -1,0 +1,56 @@
+Error:
+junit.framework.AssertionFailedError: expected:<EMAIL> but was:<EMAIL>	
+Cause:
+Compare enum with enum, not with String	
+Fix:
+change Assert.assertEquals(""EMAIL"", ident.getType());
+to Assert.assertEquals(EnumIdentificationType.EMAIL, ident.getType());
+where ident.getType() is an enum.
+
+Error:
+assert(false) not throwing assertFail	
+Cause:
+This will not fail because by default, assertions are turned off.	
+Fix:
+assertTrue(false)
+
+Error:
+When testing lists, using for loop to test for elements will pass if there are no elements in the list.
+e.g.
+int ctr=0;
+for (Item item : list){
+    if (ctr == 0){
+      assertEquals(""something"", item.getName());  
+    }
+    ctr++; 
+}
+Cause:
+for loop will not go in loop if size is 0.
+Fix:
+Add test for size to be sure we have elements in the list.
+
+Error:
+When testing for exceptions, it will pass even if the Exception was not thrown.
+e.g.
+try{
+    doSomething();
+    fail(""expected exception not thrown"");
+}
+catch (SpecificException e){
+    assertTrue(e.getMessage().indexOf(""the error message"")>-1);
+}
+catch (Exception e){
+    fail(""unexpected exception thrown"");
+}
+Cause: 
+Without the catch Exception, other exceptions thrown won't be flagged as failure.
+Fix:
+Use fail() to throw error if no exceptions thrown.
+
+Error:
+Assert failures inside the run method are not reported
+Cause:
+When testing multi threaded calls, assert failures inside the run method are not reported
+so basically junit does not work in multi-threaded calls
+Fix:
+Don't use JUnit in Threads.

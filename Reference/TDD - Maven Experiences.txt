@@ -1,0 +1,216 @@
+Maven Experiences:
+1.
+http://www.thecorneroffice.org/blog/plink/2009/02/090226-1759.html
+Multiple bindings were found on the class path 
+SLF4J API is designed to bind with one and only one underlying logging framework at a time. If more than one binding is present on the class path, SLF4J will emit a warning, listing the location of those bindings. When this happens, select the one and only one binding you wish to use, and remove the other bindings. 
+
+For example, if you have both slf4j-simple-1.5.8.jar and slf4j-nop-1.5.8.jar on the class path and you wish to use the nop (no-operation) binding, then remove slf4j-simple-1.5.8.jar from the class path.
+<dependency>
+      	<groupId>org.apache.cxf</groupId>
+      	<artifactId>cxf-bundle</artifactId>
+      	<scope>test</scope>
+      	<exclusions>
+      		<exclusion>
+      			<groupId>com.sun.xml.bind</groupId>
+      			<artifactId>jaxb-xjc</artifactId>
+      		</exclusion>
+      		<exclusion>
+      			<groupId>opensaml</groupId>
+				<artifactId>opensaml</artifactId>
+      		</exclusion>
+			<exclusion>
+			  <groupId>org.slf4j</groupId>
+			  <artifactId>slf4j-jdk14</artifactId>
+			</exclusion>
+      	</exclusions>
+</dependency>
+
+2. Build is failing. 
+Cause: Sometimes, downloading fails, or archived pom is incomplete.
+Solution: Delete repository folder of particular artifact and rerun build.
+
+1. client jar not being created.
+pom is declared as being of type jar instead of type ejb
+
+2.
+Maven not running tests.
+Reason: Tests were not named *Test, even if they are in test folder, they would not be run.
+
+3.
+mvn install on ear project says
+Artifact[ejb:org.kristoffer:openejb-jar] is not a dependency of the project.
+	<dependencies>
+		<dependency>
+			<groupId>org.kristoffer</groupId>
+			<artifactId>openejb-jar</artifactId>
+			<type>jar</type>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+reason: 
+type should be ejb.
+
+4.
+[WARNING] repository metadata for: 'snapshot org.codehaus.cargo:cargo-maven2-plugin:1.0.1-SNAPSHOT' could not be retrieved from repository: 
+codehaus due to an error: GET request of: org/codehaus/cargo/cargo-maven2-plugin/1.0.1-SNAPSHOT/maven-metadata.xml from codehaus failed
+[INFO] Repository 'codehaus snapshot repository' will be blacklisted
+Downloading: http://repository.jboss.org/maven2/org/codehaus/cargo/cargo-maven2-plugin/1.0.1-SNAPSHOT/cargo-maven2-plugin-1.0.1-SNAPSHOT.pom
+[INFO] Unable to find resource 'org.codehaus.cargo:cargo-maven2-plugin:pom:1.0.1-SNAPSHOT' in repository jboss repository (http://repository.jboss.org/maven2)
+Reason:
+		<pluginRepository>
+			<id>codehaus 
+			repository</id>
+			<url>http://snapshots.repository.codehaus.org</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+Solution:
+		<pluginRepository>
+			<id>codehaus repository</id>
+			<url>http://snapshots.repository.codehaus.org</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+
+5.
+Missing:
+----------
+1) com.oracle:ojdbc14:jar:10.2.0.2.0
+
+  Try downloading the file manually from the project website.
+
+  Then, install it using the command:
+      mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversi
+on=10.2.0.2.0 -Dpackaging=jar -Dfile=/path/to/file
+
+  Alternatively, if you host your own repository you can deploy the file there:
+
+      mvn deploy:deploy-file -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversion
+=10.2.0.2.0 -Dpackaging=jar -Dfile=/path/to/file -Durl=[url] -DrepositoryId=[id]
+
+  Path to dependency:
+        1) org.kristoffer:openejb-jar:ejb:0.0.1-SNAPSHOT
+        2) com.oracle:ojdbc14:jar:10.2.0.2.0
+Reason: Oracle required user to sign license agreement.
+Solution: mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversion=10.2.0.2.0 -Dpackaging=jar -Dfile=C:\Java\OracleXE\app\oracle\product\10.2.0\server\jdbc\lib\ojdbc14.jar
+It will create jar and pom files.
+
+What if you specify a version not in central repository? e.g. 10.2.0.1.0
+Running install will only add jar but no pom filesm, when during build, you'll get this:
+Downloading: http://mirrors.ibiblio.org/pub/mirrors/maven2//com/oracle/ojdbc14/10.2.0.1.0/ojdbc14-10.2.0.1.0.pom
+[INFO] Unable to find resource 'com.oracle:ojdbc14:pom:10.2.0.1.0' in repository central (http://repo1.maven.org/maven2)
+Downloading: http://mirrors.ibiblio.org/pub/mirrors/maven2//com/oracle/ojdbc14/10.2.0.1.0/ojdbc14-10.2.0.1.0.jar
+[INFO] Unable to find resource 'com.oracle:ojdbc14:jar:10.2.0.1.0' in repository central (http://repo1.maven.org/maven2)
+
+6.
+[ERROR] BUILD ERROR
+[INFO] ------------------------------------------------------------------------
+[INFO] Artifact [org.kristoffer:openejb-ear:ear] is not a dependency of the project.
+Reason: Cargo ear not explicitly set as dependency
+Solution:
+Add ear file explicitly as dependency.
+		<dependency>
+			<groupId>org.kristoffer</groupId>
+			<artifactId>openejb-ear</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>ear</type>
+		</dependency>
+7.
+D:\Sandbox\openejb\openejb-jar\src\main\java\com\kristoffer\openejb\service\CompanyServiceRemote.java:[5,1] annotations are not supported in -source 1.3
+(use -source 5 or higher to enable annotations)
+@Remote
+Solution: add this under plugins
+				<!-- By default, 1.3 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+
+8.
+12:14:18,339 ERROR [ProfileServiceBootstrap] Failed to load profile: Summary of incomplete deployments (SEE PREVIOUS ERRORS FOR DETAILS):
+
+DEPLOYMENTS MISSING DEPENDENCIES:
+  Deployment "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyDaoImpl,service=EJB3" is missing the following dependencies:
+    Dependency "<UNKNOWN jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyDaoImpl,service=EJB3>" (should be in state
+ "Described", but is actually in state "** UNRESOLVED Demands 'persistence.unit:unitName=openejb-ear-0.0.1-SNAPSHOT.ear/openejb-jar-0.0.1-SNAPSHOT.jar#openejb'**")
+ 
+  Deployment "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyDaoImpl,service=EJB3_endpoint" is missing the following dependencies:
+    Dependency "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyDaoImpl,service=EJB3" (should be in state "Configured", but is actually in state "PreInstall")
+  Deployment "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyServiceImpl,service=EJB3" is missing the following dependencies:
+    Dependency "<UNKNOWN jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyServiceImpl,service=EJB3>" (should be in state "Described", but is actually in state 
+    "** UNRESOLVED Demands 'jndi:openejb-ear-0.0.1-SNAPSHOT/CompanyDaoImpl/local-com.kristoffer.openejb.dao.CompanyDao' **")
+  Deployment "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyServiceImpl,service=EJB3_endpoint" is missing the following dependencies:
+    Dependency "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyServiceImpl,service=EJB3" (should be in state "Configured", but is actually in state "PreInstall")
+  Deployment "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeDaoImpl,service=EJB3" is missing the following dependencies:
+    Dependency "<UNKNOWN jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeDaoImpl,service=EJB3>" (should be in state "Described", but is actually in state 
+    "** UNRESOLVED Demands 'persistence.unit:unitName=openejb-ear-0.0.1-SNAPSHOT.ear/openejb-jar-0.0.1-SNAPSHOT.jar#openejb' **")
+  Deployment "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeDaoImpl,service=EJB3_endpoint" is missing the following dependencies:
+    Dependency "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeDaoImpl,service=EJB3" (should be in state "Configured", but is actually in state "PreInstall")
+  Deployment "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeServiceImpl,service=EJB3" is missing the following dependencies:
+    Dependency "<UNKNOWN jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeServiceImpl,service=EJB3>" (should be in state "Described", but is actually in state 
+    "** UNRESOLVED Demands 'jndi:openejb-ear-0.0.1-SNAPSHOT/EmployeeDaoImpl/local-com.kristoffer.openejb.dao.EmployeeDao' **")
+  Deployment "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeServiceImpl,service=EJB3_endpoint" is missing the following dependencies:
+    Dependency "jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeServiceImpl,service=EJB3" (should be in state "Configured", but is actually in state "PreInstall")
+  Deployment "persistence.unit:unitName=openejb-ear-0.0.1-SNAPSHOT.ear/openejb-jar-0.0.1-SNAPSHOT.jar#openejb" is missing the following dependencies:
+    Dependency "jboss.jca:name=openejbDatabase,service=DataSourceBinding" (should be in state "Create", but is actually in state "** NOT FOUND Depends on 'jboss.jca:name=openejbDatabase,service=DataSourceBinding' **")
+    Dependency "jboss.jca:name=openejbDatabaseXA,service=DataSourceBinding" (should be in state "Create", but is actually in state "** NOT FOUND Depends on 'jboss.jca:name=openejbDatabaseXA,service=DataSourceBinding' **")
+
+DEPLOYMENTS IN ERROR:
+  Deployment "<UNKNOWN jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyServiceImpl,service=EJB3>" is in error due to the following reason(s): 
+  ** UNRESOLVED Demands 'jndi:openejb-ear-0.0.1-SNAPSHOT/CompanyDaoImpl/local-com.kristoffer.openejb.dao.CompanyDao' **
+  Deployment "jboss.jca:name=openejbDatabaseXA,service=DataSourceBinding" is in error due to the following reason(s): ** NOT FOUND Depends on 'jboss.jca:name=openejbDatabaseXA,service=DataSourceBinding' **
+  Deployment "<UNKNOWN jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeDaoImpl,service=EJB3>" is in error due to the following reason(s): 
+  ** UNRESOLVED Demands 'persistence.unit:unitName=openejb-ear-0.0.1-SNAPSHOT.ear/openejb-jar-0.0.1-SNAPSHOT.jar#openejb' **
+  Deployment "<UNKNOWN jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=CompanyDaoImpl,service=EJB3>" is in error due to the following reason(s): 
+  ** UNRESOLVED Demands 'persistence.unit:unitName=openejb-ear-0.0.1-SNAPSHOT.ear/openejb-jar-0.0.1-SNAPSHOT.jar#openejb' **
+  Deployment "<UNKNOWN jboss.j2ee:ear=openejb-ear-0.0.1-SNAPSHOT.ear,jar=openejb-jar-0.0.1-SNAPSHOT.jar,name=EmployeeServiceImpl,service=EJB3>" is in error due to the following reason(s): 
+  ** UNRESOLVED Demands 'jndi:openejb-ear-0.0.1-SNAPSHOT/EmployeeDaoImpl/local-com.kristoffer.openejb.dao.EmployeeDao' **
+  Deployment "jboss.jca:name=openejbDatabase,service=DataSourceBinding" is in error due to the following reason(s): ** NOT FOUND Depends on 'jboss.jca:name=openejbDatabase,service=DataSourceBinding' **
+Reason: missing ds files in deploy folder.
+Solution: add ds files.
+Tip to faster diagnosis: With so many logging, just go to the bottom of the log to see the cause of the problem.
+
+9.
+When in client project, running mvn integration-test will not run post-integration-test, run mvn verify or install will.
+When in client project, deployed ear is openejb-ear-0.0.1-SNAPSHOT.ear
+When run from parent project, OpenEJB.ear is deployed.
+Reason:
+Because the test relies on the name of the ear being OpenEJB, running mvn verify in client project will fail tests.
+	<deployable>
+		<groupId>org.kristoffer</groupId>
+		<artifactId>openejb-ear</artifactId>
+		<type>ear</type>
+	</deployable>
+
+Solution:
+	<deployable>
+		<groupId>org.kristoffer</groupId>
+		<artifactId>openejb-ear</artifactId>
+		<type>ear</type>
+		<properties>
+			<name>OpenEJB</name>
+		</properties>
+	</deployable>
+
+10.[WARNING] While downloading xerces:xerces:2.4.0
+  This artifact has been relocated to xerces:xercesImpl:2.4.0.
+http://repo2.maven.org/maven2/xerces/xerces/2.4.0/xerces-2.4.0.pom has this
+<project>
+  <modelVersion>4.0.0</modelVersion> 
+  <groupId>xerces</groupId> 
+  <artifactId>xerces</artifactId> 
+  <version>2.4.0</version> 
+  <distributionManagement>
+  <relocation>
+  <groupId>xerces</groupId> 
+  <artifactId>xercesImpl</artifactId> 
+  </relocation>
+  </distributionManagement>
+</project>
+Solution: Change to new/relocated coordinate.

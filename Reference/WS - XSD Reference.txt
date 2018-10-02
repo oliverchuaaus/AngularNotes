@@ -1,0 +1,146 @@
+Data Types
+string
+  xs:string - as is
+  xs:normalizedString - remove cr/lf/tab
+  xs:token - remove cr/lf/tab/leading or trailing spaces
+date
+  xs:date - "YYYY-MM-DD"
+  xs:time - "hh:mm:ss"
+  xs:dateTime - "YYYY-MM-DDThh:mm:ss"
+  xs:duration - "PnYnMnDTnHnMnS"
+numeric
+  xs:decimal
+  xs:integer
+misc
+  xs:boolean
+  xs:anyURI
+
+
+
+Simple Element
+<xs:element name="lastname" type="xs:string"/>
+<xs:element name="lastname" type="xs:string" default ="red"/>
+<xs:element name="lastname" type="xs:string" fixed ="red"/>
+
+
+Attribute
+<xs:attribute name="lang" type="xs:string"/>
+<xs:attribute name="lang" type="xs:string" default ="EN"/>
+<xs:attribute name="lang" type="xs:string" fixed ="EN"/>
+
+Simple Types
+Choice A: internal simple type
+<xs:element name="car">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Audi"/>
+      <xs:enumeration value="Golf"/>
+      <xs:enumeration value="BMW"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+
+
+Choice B: reusable simple type
+<xs:simpleType name="carType">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="Audi"/>
+    <xs:enumeration value="Golf"/>
+    <xs:enumeration value="BMW"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:element name="car" type="carType"/>
+
+Restriction Types
+a. Values - maxInclusive, minInclusive, maxEclusive, minExclusive
+b. Set of Values - enumeration
+c. Series of Values - pattern
+<xs:element name="letter">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-z]"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+d. Series of Values others - * (any number), +(pairs), | (or), {n} (given number)
+<xs:element name="letter">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([a-z])*"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+e. Whitespace characters - whitespace = preserve or replace or collapse
+<xs:element name="address">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+f. Length - length (exact), maxlength (range), minlength (range)
+g. others - fractionDigits, totalDigits
+
+
+4 Kinds of Complex Types
+a. empty elements
+<product pid="1345"/>
+b. elements only
+<employee>
+  <firstname>John</firstname>
+  <lastname>Smith</lastname>
+</employee>
+c. text only
+<food type="dessert">Ice cream</food>
+d. both elements and text
+<description>
+It happened on <date lang="norwegian">03.03.99</date> ....
+</description>
+
+Complex Types:
+Choice A: internal complex type
+<xs:element name="employee">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="firstname" type="xs:string"/>
+      <xs:element name="lastname" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+Choice B: reusable complex type
+<xs:element name="employee" type="personinfo"/>
+<xs:complexType name="personinfo">
+  <xs:sequence>
+    <xs:element name="firstname" type="xs:string"/>
+    <xs:element name="lastname" type="xs:string"/>
+  </xs:sequence>
+</xs:complexType>
+
+With Choice B, you can extend complex type
+<xs:complexType name="fullpersoninfo">
+  <xs:complexContent>
+    <xs:extension base="personinfo">
+      <xs:sequence>
+        <xs:element name="address" type="xs:string"/>
+        <xs:element name="city" type="xs:string"/>
+        <xs:element name="country" type="xs:string"/>
+      </xs:sequence>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+
+
+7 indicators:
+A.Order indicators:
+	a. all - no order
+	b. choice - either or
+	c. sequence - ordered
+B.Occurrence indicators:
+	a. maxOccurs 
+	b. minOccurs 
+C.Group indicators:
+	a. group (group elements) - can be reused as a group (not complexType)
+	b. attributeGroup (group attributes or groups) can be reused as a group attribute (not complexType)
+ 

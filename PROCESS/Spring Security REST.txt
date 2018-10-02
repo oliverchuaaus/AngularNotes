@@ -1,0 +1,39 @@
+$ curl localhost:8080
+{"error":"unauthorized","error_description":"Full authentication is required to access this resource"}
+
+
+toffer@DESKTOP-7A6HVER ~
+$ curl client:secret@localhost:8080/oauth/token -d grant_type=password -d username=user -d password=pwd
+{"timestamp":1507261340670,"status":401,"error":"Unauthorized","message":"Bad credentials","path":"/oauth/token"}
+
+
+toffer@DESKTOP-7A6HVER ~
+$ curl testjwtclientid:MaYzkSjmkzPC57L@localhost:8080/oauth/token -d grant_type=password -d username=john.doe -d password=jwtpass
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidGVzdGp3dHJlc291cmNlaWQiXSwidXNlcl9uYW1lIjoiam9obi5kb2UiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNTA3MzA0NTU4LCJhdXRob3JpdGllcyI6WyJTVEFOREFSRF9VU0VSIl0sImp0aSI6IjM3MzRiZjllLTM0NTEtNGM4MS04YmYzLTRjM2Y0MzU2YzhkMCIsImNsaWVudF9pZCI6InRlc3Rqd3RjbGllbnRpZCJ9.5fjfzrqhTVt8GsO2ajx2diMGku4iNBlzQDGIEtjf-iE","token_type":"bearer","expires_in":43199,"scope":"read write","jti":"3734bf9e-3451-4c81-8bf3-4c3f4356c8d0"}
+
+toffer@DESKTOP-7A6HVER ~
+$
+curl http://localhost:8080/springjwt/cities -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidGVzdGp3dHJlc291cmNlaWQiXSwidXNlcl9uYW1lIjoiYWRtaW4uYWRtaW4iLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNDk0NDU0MjgyLCJhdXRob3JpdGllcyI6WyJTVEFOREFSRF9VU0VSIiwiQURNSU5fVVNFUiJdLCJqdGkiOiIwYmQ4ZTQ1MC03ZjVjLTQ5ZjMtOTFmMC01Nzc1YjdiY2MwMGYiLCJjbGllbnRfaWQiOiJ0ZXN0and0Y2xpZW50aWQifQ.rvEAa4dIz8hT8uxzfjkEJKG982Ree5PdUW17KtFyeec"
+{"error":"invalid_token","error_description":"Cannot convert access token to JSON"}
+
+toffer@DESKTOP-7A6HVER ~
+$
+curl http://localhost:8080/springjwt/cities -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidGVzdGp3dHJlc291cmNlaWQiXSwidXNlcl9uYW1lIjoiam9obi5kb2UiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNTA3MzA0NTU4LCJhdXRob3JpdGllcyI6WyJTVEFOREFSRF9VU0VSIl0sImp0aSI6IjM3MzRiZjllLTM0NTEtNGM4MS04YmYzLTRjM2Y0MzU2YzhkMCIsImNsaWVudF9pZCI6InRlc3Rqd3RjbGllbnRpZCJ9.5fjfzrqhTVt8GsO2ajx2diMGku4iNBlzQDGIEtjf-iE"
+[{"id":1,"name":"Bamako"},{"id":2,"name":"Nonkon"},{"id":3,"name":"Houston"},{"id":4,"name":"Toronto"},{"id":5,"name":"New York"},{"id":6,"name":"Mopti"},{"id":7,"name":"Koulikoro"},{"id":8,"name":"Moscow"}]
+
+
+toffer@DESKTOP-7A6HVER ~
+$
+curl http://localhost:8080/springjwt/users -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidGVzdGp3dHJlc291cmNlaWQiXSwidXNlcl9uYW1lIjoiam9obi5kb2UiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNTA3MzA0NTU4LCJhdXRob3JpdGllcyI6WyJTVEFOREFSRF9VU0VSIl0sImp0aSI6IjM3MzRiZjllLTM0NTEtNGM4MS04YmYzLTRjM2Y0MzU2YzhkMCIsImNsaWVudF9pZCI6InRlc3Rqd3RjbGllbnRpZCJ9.5fjfzrqhTVt8GsO2ajx2diMGku4iNBlzQDGIEtjf-iE"
+{"error":"access_denied","error_description":"Access is denied"}
+
+
+
+toffer@DESKTOP-7A6HVER ~
+$ curl testjwtclientid:MaYzkSjmkzPC57L@localhost:8080/oauth/token -d grant_type=password -d username=admin.admin -d password=jwtpass
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidGVzdGp3dHJlc291cmNlaWQiXSwidXNlcl9uYW1lIjoiYWRtaW4uYWRtaW4iLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNTA3MzA1NDk2LCJhdXRob3JpdGllcyI6WyJTVEFOREFSRF9VU0VSIiwiQURNSU5fVVNFUiJdLCJqdGkiOiI3NjcxMmY4ZC0wNjBjLTQxOWEtYmI4MC1kZDkzYzczMDhjYTYiLCJjbGllbnRfaWQiOiJ0ZXN0and0Y2xpZW50aWQifQ.YCs1ez7zmRfVmruodFMysUZde8l4olM0sFvUeUIjtvk","token_type":"bearer","expires_in":43199,"scope":"read write","jti":"76712f8d-060c-419a-bb80-dd93c7308ca6"}
+
+
+
+curl http://localhost:8080/springjwt/users -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidGVzdGp3dHJlc291cmNlaWQiXSwidXNlcl9uYW1lIjoiYWRtaW4uYWRtaW4iLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNTA3MzA1NDk2LCJhdXRob3JpdGllcyI6WyJTVEFOREFSRF9VU0VSIiwiQURNSU5fVVNFUiJdLCJqdGkiOiI3NjcxMmY4ZC0wNjBjLTQxOWEtYmI4MC1kZDkzYzczMDhjYTYiLCJjbGllbnRfaWQiOiJ0ZXN0and0Y2xpZW50aWQifQ.YCs1ez7zmRfVmruodFMysUZde8l4olM0sFvUeUIjtvk"
+[{"id":1,"username":"john.doe","firstName":"John","lastName":"Doe","roles":[{"id":1,"roleName":"STANDARD_USER","description":"Standard User - Has no admin rights"}]},{"id":2,"username":"admin.admin","firstName":"Admin","lastName":"Admin","roles":[{"id":1,"roleName":"STANDARD_USER","description":"Standard User - Has no admin rights"},{"id":2,"roleName":"ADMIN_USER","description":"Admin User - Has permission to perform admin tasks"}]}]

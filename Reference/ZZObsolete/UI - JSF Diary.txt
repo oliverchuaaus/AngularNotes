@@ -1,0 +1,244 @@
+JSF
+1. How to layout JSF elements?
+Use panelGrid like table, specifying elements
+
+2. How to use enum for radio or select?
+list of enum values need to be converted to an array of SelectItem
+field for choice can be enum, and can be safely converted.
+
+3. How to enable auto-complete?
+http://www.mkyong.com/jsf2/eclipse-ide-xhtml-code-assist-is-not-working-for-jsf-tag/
+
+4. Good JSF tutorial
+http://www.coreservlets.com/JSF-Tutorial/jsf2/
+
+5. How to colspan header or footer?
+Put outside h:column.
+How to colspan column?
+cannot be done
+
+6. How to absolute reference to css file
+#{request.contextPath}
+Source: http://stackoverflow.com/questions/1815869/external-css-for-jsf
+
+7. Session is closed when transaction is committed and trying to display select values.
+Workaround: add navigation rule in faces-config.xml and set redirect to true
+or add ?faces-redirect=true to navigate string in ManagedBean.
+
+8. Target Unreachable, identifier 'unitAddBean' resolved to null
+Workaround: define bean sin faces-config.xml
+
+9. Required does not trim, 
+use Converter to trim and register 
+<converter>
+  <converter-for-class>java.lang.String</converter-for-class>
+  <converter-class>com.tougher.intranet.global.controller.StringTrimConverter</converter-class>
+</converter>
+Source: http://stackoverflow.com/questions/2030086/jsf-trimming-white-spaces
+
+10. facesContext.add("fieldName", new FacesMessage("Error!")); not showing up.
+Use facesContext.add("form:fieldName", new FacesMessage("Error!"));
+Source: http://stackoverflow.com/questions/315804/how-to-display-my-applications-errors-in-jsf
+
+
+
+
+
+
+
+
+CSS
+Display link differently if disabled.
+
+
+
+
+
+
+
+
+
+
+
+
+Eclipse Maven
+1. How to make maven project deployable in wtp web server?
+Not possible.
+When web app facet added to project, it can be deployed, 
+but the maven libraries are not included.
+
+Solution 1:
+Use tomcat-maven-plugin to deploy maven project to web server
+Setup Eclipse tomcat server, enable tomcat manager application
+Downside is there is no hot deploy when files change
+Source: https://wiki.base22.com/display/btg/How+to+create+a+Maven+web+app+and+deploy+to+Tomcat+-+fast
+
+Additional: point to tomcat manager:
+Place manager.xml in C:\Mine\Sandbox\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\conf\Catalina\localhost
+with the following contents:
+<Context path="/manager" privileged="true"
+         docBase="C:\Java\apache-tomcat-7.0.14\webapps\manager">
+</Context>
+
+Additional: for tomcat 7, use following for tomcat-users.xml
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<user username="admin" password="admin" roles="manager-gui,manager-script"/>
+Additional: for tomcat 7, 
+use http://localhost:9090/manager/text
+Source: http://stackoverflow.com/questions/3714080/tomcat-7-maven-plugin
+
+
+Solution 2:
+Use solution 1 with Manik
+http://www.imixs.org/manik.updatesite/site.xml
+Target folder:
+C:\Mine\Sandbox\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\webapps\MyIntranet
+Source: http://code.google.com/p/manik-hot-deploy/
+
+To summarise:
+Deploy using maven, do not add to server in Servers tab.
+Whenever files are updated, they are deployed to the target folder file per file.
+
+2. Warning
+Classpath entry org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER will not be exported or published. Runtime ClassNotFoundExceptions may result.  
+   1. Open the properties of the project that generates this warning
+   2. Click on "Java Build Path"
+   3. Click on the tab "Order and Export"
+   4. Enable "Maven Dependencies"
+   5. Click on "Ok"
+   6. Open the "Problems" view
+   7. Select the warning we are trying to solve, and press "Ctrl-1", click "exclude..."
+   8. Click on "Ok"
+http://geertschuring.wordpress.com/2009/03/05/why-the-maven2_classpath_container-will-not-be-exported-or-published/
+
+3. Build Goals
+Ability to hot deploy to server via eclipse
+Ability to maven deploy to server
+command line maven and m2eclipse should run the same
+
+Ability to run unit tests in eclipse
+Ability to run unit tests in maven
+
+Maintain one version of resources for local and deployed app:
+persistence.xml
+spring.xml
+
+Scripts to: 
+delete tables - auto
+create tables - auto
+recreate sequences - auto
+
+3 profiles:
+one local per dev need to overwrite settings, includes hudson
+one server
+
+Auto-complete for JSF
+
+4. Running unit test and no unit test showing up in UnitTest tab.
+Solution: Add Junit libraries in Project Build Path
+
+5. Running unit test and error: Unknown entity.
+persistence.xml in test/resources
+should be in main/resources
+
+Java class with annotation to persistence
+should be in main/java
+
+
+
+
+
+
+Maven
+1. when skipping tests, how to not run goals for process-test-resources
+
+
+
+
+
+
+
+
+
+
+DBUnit
+1. How to access xml file from classpath?
+http://stackoverflow.com/questions/1464291/how-to-really-read-text-file-from-classpath-in-java
+
+2. Unique constraint issues:
+Set sequence to higher number than highest test data.
+However, when database is refreshed, sequence not updated to latest.
+
+3. Foreign Key constraint issues:
+???
+
+4. hibernate3-maven-plugin hangs for 3 mins before going to hbm2ddl
+
+5. Intermittent ORA-12519 error on 10g XE 
+In brief: It's a bug in how the connections are monitored solved by increasing the processes parameter i.e. ALTER SYSTEM SET PROCESSES=150 SCOPE=SPFILE and then restart the db.
+Source: http://forums.oracle.com/forums/thread.jspa?messageID=1255542
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Eclipse
+1. When copying existing project but changing webapp name,
+change in org.eclipse.wst.common.component file that is in the .settings directory of the project.
+Some cannot be changed inside Eclipse
+Source: http://www.corneliadavis.com/blog/index.php/2010/01/all-the-little-references-when-you-copy-an-eclipse-project/
+
+2. Debugger stops in ThreadPoolExecutor
+in the Preferences Dialog, the Debug pane under Java in the tree hierarchy, has the option titled "Suspend execution on uncaught exceptions", which can be unchecked.
+Source: http://stackoverflow.com/questions/6290470/eclipse-debugger-always-blocks-on-threadpoolexecutor-without-any-obvious-exceptio
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Best Practices
+1. Name props as [module]Prop to avoid confusion with objects
+JPA object unit.unitName vs Msg Property unit.unitName
+so for Property, use unitProp.unitName
+2. Don't place properties in one single file
+3. IDEA:
+There are critical paths in the app.
+These lets you create objects, etc. towards a goal.
+These operations should be part of the build to make sure no bug becomes a blocker
+All other are just validations of invalid values.
+
+
+
+
+
+
+
+Pending:
+Make Spring DI work in ManagedBean - NOT WORKING!
+Make pagination table as Request scope - NOT WORKING!
+	and make commandLink submit all form elements instead of just params 
+Make navigation to action work (instead of to viewId/jsf) - NOT WORKING!
+	so that after add, new unit shows up in the list, and update link show existing data
+Make composite component work using Address

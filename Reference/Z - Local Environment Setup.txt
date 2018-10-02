@@ -1,0 +1,63 @@
+1. Install jdk
+
+3. Install eclipse 
+add jdk
+
+4. Install OracleXE
+Oracle XE Setup
+a. Install Oracle XE, use george# as password
+b. In Services, change XE and Listener service to Delayed Start
+	
+5. Install SQLDeveloper
+a. Turn on time component:
+Go to Preferences > Type in NLS > Type ‘DD-MON-YYYY HH24:MI:SS’ in Date Format
+b. Turn on Line Numbers
+Go to Preferences > Type in Line Gutter > Check Show Line Numbers
+
+For Oracle XE:
+In SQLDeveloper, 
+a. Add new connection named "sys@xe" sys/george# and change role from default to SYSDBA.
+b. Turn off password expiry of oraclexe
+alter profile default limit password_life_time unlimited;
+c. Connect and Change port to 8081 by running 
+EXEC DBMS_XDB.SETHTTPPORT(8081);
+	1. Run to check if port has been changed: 
+		select dbms_xdb.gethttpport as "HTTP-Port", dbms_xdb.getftpport as "FTP-Port" from dual;
+	2. Update C:\Work\oraclexe\app\oracle\product\11.2.0\server\Get_Started.url to point to port 8081
+	3. Open URL to test.
+d. increase processes:
+	1. Connect as SYSDBA
+	2. Run: alter system set processes=500 scope=spfile;
+	3. Restart Oracle XE Service
+	4. Run: show parameter processes; to verify processes has been increased to 500
+e. Create users
+create user sandbox identified by sandbox;
+grant dba to sandbox;
+create user jpasandbox identified by jpasandbox;
+grant dba to jpasandbox;
+
+6. Install maven
+a. register oracle jdbc jar manually:
+c:\Work\apache-maven-3.5.0\bin\mvn install:install-file -Dfile=C:\Work\sqldeveloper\jdbc\lib\ojdbc8.jar -DgroupId=com.oracle -DartifactId=ojdbc -Dversion=11.2.0 -Dpackaging=jar -DgeneratePom=true
+http://stackoverflow.com/questions/11425932/eclipse-dali-jpa-error-console-configuration-does-not-exist
+
+7. GIT and TortoiseGIT
+Add .* and target to c:\users\user\.gitignore
+then point git to global ignore file
+git config --global core.excludesfile "%USERPROFILE%\.gitignore"
+https://stackoverflow.com/questions/7335420/global-git-ignore
+
+8. Git Repo
+https://github.com/oliverchuaaus/
+oliverchua/your password@
+
+9. Install Tomcat
+update /tomcat/conf/tomcat-users.xml
+add these lines
+  <role rolename="manager-gui"/>
+  <user username="admin" password="george#" roles="manager-gui"/>
+http://localhost:8080/manager
+admin/george#
+
+a. Add datasource
+b. add server entry in eclipse

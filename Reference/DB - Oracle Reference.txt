@@ -1,0 +1,9 @@
+Load Blob from file
+http://psoug.org/reference/dbms_lob.html
+search Load from file demo
+
+Delete all objects of user
+https://community.oracle.com/thread/328462?start=0&tstart=0
+
+DB Dates and Times
+http://infolab.stanford.edu/~ullman/fcdb/oracle/or-time.html

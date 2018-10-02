@@ -1,0 +1,98 @@
+Struts implement MVC design pattern
+Model - Business Logic and Java Beans
+View - JSP pages and tiles
+Controller - ActionServlet and ActionMapping
+
+
+ActionForm
+Action
+public ActionForward execute(ActionMapping mapping,
+                    ActionForm form,
+                    ServletRequest request,
+                    ServletResponse response)
+                    throws Exception;
+
+
+
+Struts configuration
+struts-config.xml
+
+<struts-config>
+	<form-beans>
+            <form-bean
+                name="logonForm"
+                type="app.LogonForm"/>
+	</form-beans>
+        <action-mappings>
+            <action
+                path="/Welcome"
+                forward="/pages/Welcome.jsp
+	     </action>
+	</action-mappings>
+</struts-config>
+
+Web DD configuration
+<servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>
+        org.apache.struts.action.ActionServlet
+    </servlet-class>
+    <init-param>
+        <param-name>config</param-name>
+        <param-value>
+         /WEB-INF/struts-config.xml
+        </param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+<servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+</servlet-mapping>
+
+
+Validator
+validation.xml
+
+<form-validation>
+<formset>
+<form name="logonForm">
+  <field property="username" depends="required">
+    <msg name="required" key="error.username"/>
+  </field>
+</form>
+</formset>
+</form-validation>
+
+struts-config.xml
+<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+<set-property
+property="pathnames"
+value="/org/apache/struts/validator/validator-rules.xml,
+    /WEB-INF/validation.xml"/>
+</plug-in>
+
+
+Tiles
+tiles-definitions.xml
+
+<tiles-definitions>
+<definition
+    name="layout"
+    path="/layout/layout.jsp">
+    <put name="body" value=""/>
+</definition>
+<definition name="homepage" extends="layout">
+    <put
+        name="body"
+        value="/index.jsp"/>
+</definition>
+<tiles-definitions>
+
+struts-config.xml
+<plug-in
+    className="org.apache.struts.tiles.TilesPlugin">
+    <set-property
+        property="definitions-config"
+        value="/WEB-INF/tiles-defs.xml"/>
+</plug-in>

@@ -1,0 +1,42 @@
+Agile methodology	
+Iterative vs Waterfall methodology
+
+Agile Manfiesto:
+Individuals and interactions OVER processes and tools
+Working software OVER comprehensive documentation
+Customer collaboration OVER contract negotiation
+Responding to change OVER following a plan
+
+Practices:
+User stories
+Daily Scrum meetings
+Fortnight sprints
+Peer testing and CI (continuous integration)
+TDD (test driven development)
+
+Scrum	
+a. one of many agile frameworks, most popular against XP, Lean, etc.
+b. daily scrum meetings, 15 minutes standing to keep meetings short. 
+c. Report progress and flag issues, to be resolved by scrum master after the meeting
+d. prioritised list of requirements
+
+User stories	
+a. plain english requirements from users
+
+Iteration or sprint	
+a. one iteration of requirements, coding, testing
+b. typically 2 weeks, end result is a demo-able software functionality 
+c. start with review of previous sprint (sprint retrospective)
+d. use user stories to prioritise requirements (sprint grooming)
+e. estimate and assign to people (sprint planning)
+	
+Advantages of Agile	
+a. when scope is uncertain, incremental development helps
+b. business side - easier for client to sign off contracts
+c. business side - earlier feedback
+d. business side - greater transparency
+	
+Estimation
+a. Estimate days in Fibonnaci numbers (1),1, 2, 3, 5, 8, 13, 21
+b. as tasks gets longer, the more uncertain we are of the effort needed
+c. you can use cards, estimate individually then explain reason for estimate, get the mean of estimates.

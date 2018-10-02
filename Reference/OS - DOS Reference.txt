@@ -1,0 +1,5 @@
+Batch File Commands
+http://dos.rsvs.net/DOSPAGE/BATCHCOM.HTM
+
+For loop in script
+http://stackoverflow.com/questions/15577492/dos-for-loop-on-range-through-command-line

@@ -1,0 +1,260 @@
+ANSI SQL
+Data Definition Language
+
+CREATE
+CREATE TABLE table1(
+col1	varchar,
+col2	datatype1
+)
+
+DROP
+-- same as delete from table1;
+DROP table1;
+--if there are constraints, use this to bypass.
+DROP table1 CASCADE CONSTRAINTS;
+
+TRUNC
+TRUNC table1; 
+
+ALTER
+--alter table add column
+ALTER TABLE table1
+ADD col2 datatype1;
+
+--alter table delete column
+ALTER TABLE table1
+DROP col2 datatype1;
+
+--alter table update column
+ALTER TABLE table1
+MODIFY col1 datatype2;
+
+--RENAME
+ALTER TABLE table1 RENAME TO table2
+
+CREATE
+create view view1(
+(col1, col2) AS
+(SELECT col1, col2 FROM table1, table2)
+)
+
+PK
+...CONSTRAINT employee_pk PRIMARY KEY (employee_num) 
+
+FK
+...CONSTRAINT employee_fk FOREIGN KEY (employee_num) REFERENCES employee(employee_num)
+
+UNIQUE
+...CONSTRAINT employee_name_unique UNIQUE (employee_name)
+
+DROP CONSTRAINTS
+DROP CONSTRAINT constraint_name;
+
+
+
+Data Manipulation Language
+INSERT
+insert into table1 (col1, col2) values (va1, val2);
+delete from table1 where col1 = val1;
+update table1 set col1=val1;
+
+SELECT
+Structured Query Language
+select * from table1 where col1=val1;
+
+MISC
+AS - field renaming
+|| - concatenation
+DISTINCT - unique columns
+IN, ANY, SOME - col1 ANY (1,2,3) same as col1=1 or col1=2 or col1=3
+ALL - col1 > ALL (1,2,3) same as col1>1 and col1>2 and col1>3
+BETWEEN - inclusive
+LIKE - wildcard search
+	_ matches one char
+	% matches n chars
+	to escape underscore character - LIKE '%\_%' ESCAPE '\' or LIKE '%/_%' ESCAPE '/'
+ORDER BY - ascending default
+
+Null Truth Table
+AND	Null
+T	Null
+F	F
+Null	Null
+
+OR	Null
+T	T
+F	Null
+Null	Null
+
+NOT
+Null	Null
+
+
+
+JOIN conditions
+equijoin FROM table1, table2 WHERE table1.col1 = table2.col1
+non-equijoin FROM table1, table2 WHERE table1.col1 <> table2.col1
+
+JOIN types
+Cartesian - to be avoided, join has no column. All table1 rows connected to all table2 rows. 
+Resulting size is count(table1)*count(table2)
+
+Inner
+	ANSI - FROM table1 INNER JOIN table2 ON table1.col1 = table2.col1
+	Oracle - FROM table1, table2 WHERE table1.col1 = table2.col1
+Outer
+	ANSI - FROM table1 LEFT OUTER JOIN table2 ON table1.col1 = table2.col1
+	Oracle - FROM table1, table2 WHERE table1.col1 = table2.col1(+)
+	include all table1 rows even if corresponding table2.col1 is null
+
+	ANSI - FROM table1 RIGHT OUTER JOIN table2 ON table1.col1 = table2.col1
+	Oracle - FROM table1, table2 WHERE table1.col1(+) = table2.col1
+	include all table2 rows even if corresponding table1.col1 is null
+
+	ANSI - FROM table1 FULL OUTER JOIN table2 ON table1.col1 = table2.col1
+	Oracle - N/A
+Self	
+	ANSI - FROM table1 t1 INNER JOIN table1 t2 ON t1.manager=t2.employee 
+	Oracle - FROM table1 t1, table1 t2 WHERE t1.manager=t2.employee
+
+
+
+Aggregate
+GROUP 
+SELECT sum(col1) 
+FROM table1
+WHERE table1
+GROUP BY col1
+HAVING sum(col1)>100
+
+Subqueries
+2 types: 
+a. single row subqueries
+WHERE price > SELECT AVG(price)	FROM table1
+b. multiple row subqueries
+WHERE name IN (SELECT name FROM table1 WHERE table1.col1=val1);
+
+3 mutliple row subquery subtypes:
+a. multiple column
+WHERE (price, discount) in SELECT price, discount FROM table1
+b. correlated subqueries - references columns in outer query
+SELECT * FROM table1 outer WHERE price > (SELECT price FROM table2 inner WHERE inner.price > outer.price);
+c. nested subqueries - subquery inside a subquery.
+WHERE (price, discount) in (SELECT price, discount FROM table1 WHERE price = (SELECT price FROM table2 WHERE price>val2));
+
+
+Normalization
+1NF ???
+2NF ???
+3NF ???
+
+
+Oracle SQL
+To get sequence: SELECT mySequence.nextval FROM DUAL
+
+Arithmetic Expressions
+NVL (col1, 0) - null value check
+IF (col1==null) result=0
+ELSE result=col1
+
+NVL2 (col1, 'not null', 'null') result
+IF (col1!=null) result='not null'
+ELSE result ='null'
+
+DECODE (emp_id, 1000, 'NSW', 2000, 'VIC', 'Unknown') state
+IF (emp_id = 1000) state='NSW'
+ELSE IF (emp_id = 2000) state='VIC'
+ELSE state='Unknown'
+
+CASE
+CASE col1
+	WHEN 'NSW' THEN SELECT col1 FROM Cityrail
+	WHEN 'VIC' THEN SELECT col1 FROM Connex
+	ELSE SELECT col1 FROM QueenslandRail
+END
+FROM table1
+
+COALESCE
+COALESCE (col1, col2, 0) result
+IF (col1!=null) result = col1;
+ELSE IF (col2!=null) result = col2;
+ELSE result = 0;
+
+Optimisation
+1. Don't perform operations on database objects in WHERE clauses.
+Oracle will ignore index.
+WHERE table1.col1 || table2.col1 = val1;
+WHERE UPPER(table1.col1) = VAL1;
+2. Use shared statements (PreparedSatements in Java)
+If SQL is not shared, it will take up a lot of parsing time
+INSERT INTO table1 VALUES (:P1, :P2)
+3. Don't forget to tune views
+4. Simplify SQL by knowing table structure.
+NVL(col1,0) not needed if col1 is NOT NULL
+5. HAVING clauses should only be used when 
+columns with aggregate operations applied to them are restricted by the clause.
+NO  SELECT SUM(sales) GROUP BY region HAVING region <> 'NSW' 
+YES SELECT SUM(sales) GROUP BY region WHERE region <> 'NSW' 
+YES SELECT SUM(sales) GROUP BY region HAVING SUM(sales) > 1000
+6. Minimise number of table lookups,
+especially subquery SELECTs and UPDATEs
+7. EXISTS vs. IN for subqueries?
+SELECT * FROM table1 WHERE col1 EXISTS (SELECT col1 FROM table2)
+	Use when table1 is small but table2 is large. Results in full table scan of table1
+SELECT * FROM table1 WHERE col1 IN (SELECT col1 FROM table2)
+	Use when table1 and table2 are roughly the same size.
+8. EXISTS vs. IN for correlated subqueries?
+similar
+9. NOT EXISTS vs. NOT IN?
+joining values are null - NOT EXISTS performs better
+joining values are not null - NOT IN performs better
+10. Avoid DISTINCT on the owner end of one to many list, use EXISTS instead.
+SELECT DISTINCT name FROM one, many WHERE one.pk=many.fk and many.state= NSW
+	DISTINCT fetches all rows in join, then filters out duplicates
+SELECT name FROM one WHERE EXISTS (SELECT 1 FROM many WHERE one.pk=many.fk AND many.state= NSW)
+11. Outer joins can reduce the number of table lookups
+12. UNION vs. UNION ALL?
+If results in UNION are all unique, use UNION ALL
+UNION filters out duplicates, UNION ALL doesn't
+13. Use case for selective querying
+SELECT col1,
+CASE col2
+	WHEN 'NSW' THEN SELECT * FROM Cityrail
+	WHEN 'VIC' THEN SELECT * FROM Connex
+	ELSE 
+END
+FROM table1
+14. Beware of unrestricted conditions
+Use pagination to restrict rows
+WHERE rownum>start AND rownum <=end
+15. Use same datatype as in table datatype.
+Oracle allows different datatype and will convert, but conversion will take some time.
+16. Exercise caution for large tables with many indexes. -???
+
+
+Query hints
+SELECT /* + FIRST_ROWS */
+FROM table1 
+???
+
+10g Analytic Functions
+PARTITION BY
+FROM
+select col1 , sum(col2) as sums
+from table1 
+GROUP BY col1
+TO
+select col1 , 
+sum(col2)  over (partition by col1) as sums
+from table1 
+GROUP BY col1
+???
+
+Explain plan - ???
+Profiling - ???
+
+
+
+DB Admin:
+create user jpasandbox identified by jpasandbox
+grant dba to jpasandbox

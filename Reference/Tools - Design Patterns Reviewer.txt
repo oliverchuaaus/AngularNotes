@@ -1,0 +1,83 @@
+3 Types of Design Patterns:
+mnemonic: CSB
+Creational
+Structural
+Behavioral
+
+Types of Creational:
+mnemonic: FAB PS
+Factory Method	emf.createEntityManager();
+Abstract Factory Method	emf = Persistence.createEntityManagerFactory("unitName")
+Builder	
+Prototype	Spring
+Singleton	Spring
+
+Type of Structural:
+mnemonic: ABCD PFF
+Adapter		WindowAdapter
+Bridge		BridgeAction to convert one set of parameters to another
+Composite	
+Decorator	
+Proxy		Hibernate lazy loading
+Facade		Service class
+Flyweight	
+
+Type of Behavioral:
+menmonic: VISITS CCOM
+Visitor	
+Iterator	Collections iterator
+Strategy	
+Interpreter 	
+Template	Framework
+State	
+Chain of Responsibility	
+			Filters
+Command	
+Observer 	Listeners
+Mediator
+
+
+
+
+
+
+Factory Method	
+used to choose and return an instance of a class from a number of similar classes based on data you provide to the factory. 
+class NameFactory {
+ //returns an instance of LastFirst or FirstFirst
+ //depending on whether a comma is found
+ public Namer getNamer(String entry) 
+ {
+ int i = entry.indexOf("",""); //comma determines name
+ order
+ if (i>0)
+ return new LastFirst(entry); //return one class
+ else
+ return new FirstFirst(entry); //or the other
+ }
+}
+
+Builder	
+assembles a number of objects to make a new object, based on the data with which it is presented. Frequently, the choice of which way the objects are assembled is achieved using a Factory. 
+class Pizza
+private String topping;
+
+abstract class PizzaBuilder
+private Pizza pizza;
+createNewPizza(){}
+abstract createTopping();
+
+class HawaiianPizzaBuilder
+createTopping(){pizza.createTopping()}
+
+class PizzaDirector
+private PizzaBuilder builder;
+setPizzaBuilder(){}
+preparePizza(){builder.createPizza(); builder.createTopping()}
+
+
+
+
+
+Sample Code:
+https://github.com/iluwatar/java-design-patterns

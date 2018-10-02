@@ -1,0 +1,55 @@
+DATA_TABLE 
+criteria:
+important:
+	has pagination
+	has sorting
+	in memory
+options:
+	ng2-table	
+	
+
+DATEPICKER
+criteria:
+important:
+	can enter text
+	specify dateformat
+	can disable
+	can easily select older year
+	collapsed by default
+optional:
+	disable dates
+	stylable
+		
+options:
+	material2 - early year hard to select
+	ngx-bootstrap - cannot collapse
+	kekeh/mydatepciker - good
+	primeng - good, good documentation
+
+
+MODAL
+criteria:
+important:
+		
+
+	
+	
+Use reactive forms, as it is more flexible.
+
+	
+Login and Session
+
+Mimic java session:
+	a. 60 minutes time out
+	b. timeout from backend
+	c. timeout 60 mins inactive in frontend
+	d. keypress mousemove resets
+Implementation:
+	1. On load check currentDate > lastAccessed + 60 mins
+	if expired remove tokens (lastAccessed/userDetails) from local storage.
+	
+	2. Every 1 minute, increment idleTime
+	reset to 0 on mousemove or keypress	
+	
+	Every service call resets lastAccessed.
+		

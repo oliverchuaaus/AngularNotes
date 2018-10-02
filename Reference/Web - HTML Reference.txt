@@ -1,0 +1,138 @@
+http://www.w3schools.com/html/html_forms.asp
+
+html
+  head
+    title		
+  body
+    h1
+    p
+
+html5 - 2012
+<!DOCTYPE html>
+
+open link in new window:
+<a href="url" target="_blank">link text</a>
+<img src="" alt="" width="100" height="100">
+<br>
+<!-->This is a comment<-->
+
+common attributes:
+class - style class name
+id
+style - inline style
+title - displayed as tooltip
+
+Head elements:
+a. title
+<title>The Title</title>
+b. base url of all relative url on page
+<base href="http://www.img.com/images">
+c. link to css
+<link rel="stylesheet" type="text/css" href="my.css">
+d. style
+<style type="text/css">
+body {background-color:yellow;}
+p {color:blue;}
+</style>
+e. meta 
+<meta http-equiv="refresh" content="30">
+f. script
+<script></script>
+
+Styles:
+a. inline
+style attribute
+b. internal
+inside head tag
+c. external
+using link tag
+
+Tables:
+<table>
+  <caption>
+  <colgroup>
+    <col style="background-color:red">
+  </colgroup>
+  
+  <thead>
+  <tr>
+  <th></th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+    <td></td>
+  </tr>
+  </tbody>
+  
+  <tfoot>
+    <tr>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
+
+
+Link
+unordered
+<ul>
+  <li></li>
+  <li></li>
+</ul>  
+ordered
+<ol>
+  <li></li>
+  <li></li>
+</ol>
+description
+<dt>Term</dt>
+  <df>Description</df>	
+</dl>
+
+
+HTML Block 
+a. Block Elements
+h1, p, ul, table
+b. Inline Elements
+b, td, a, img
+c. Div Element
+line break before and after block
+d. span
+inline, no line breaks
+
+
+HTML Form
+a. form
+<form name="" action="">
+</form>
+b. input
+<input type="text" name="firstname">
+types: text, password, radio, checkbox, submit, reset
+label - label for input tag
+c. textarea
+d. select
+option - option in select
+optgroup - option group in select
+e. fieldset - group of form elements
+legend - caption for fieldset
+f. button
+
+
+IFrame
+<iframe src="url"></iframe>
+Colors
+#000000 - black 
+#FFFFFF - white 
+#FF0000 - red
+#00FF00 - green
+#0000FF - blue
+
+HTML Entities:
+&nbsp;
+&amp;
+&lt;
+
+HTML Encoding (Charset)
+html5:
+<meta charset="UTF-8">

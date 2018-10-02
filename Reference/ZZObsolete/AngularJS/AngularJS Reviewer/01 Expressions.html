@@ -1,0 +1,26 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<body>
+
+	<div ng-app="myApp" ng-init="person={firstName:'Kris',lastName:'Chua'};numbers=[11,22,33,44]">
+		<P>
+			a. Create person object Print person fields Use span to print fields:
+			<span ng-bind="person.firstName"></span> {{person.lastName}}
+		<P>b. Create number array Iterate and print array:
+		<ol>
+			<li ng-repeat="num in numbers">{{num}}
+		</ol>
+		<P>
+			c. Create textfield and print textfield value dynamically: <input
+				ng-model="message">{{message}}
+	</div>
+</body>
+
+<script>
+	var app = angular.module("myApp", []);
+</script>
+
+
+</html>

@@ -1,0 +1,19 @@
+How to use annotations
+https://springtestdbunit.github.io/spring-test-dbunit/
+
+Unable to load dataset via annotations
+http://stackoverflow.com/questions/29432801/databasesetup-unable-to-load-data-set
+
+Connection closed
+This is too complicated
+http://stackoverflow.com/questions/31720835/spring-dbunit-closes-connection-after-one-test
+Removed DbUnitTestExecutionListener annotation, which uses DBUnitRunner which closes connection after every method.
+
+DBUnit closes connection after one test
+http://stackoverflow.com/questions/31720835/spring-dbunit-closes-connection-after-one-test
+
+Theory:
+DBUnit limitations
+http://stackoverflow.com/questions/3950002/is-there-a-dbunit-like-framework-that-doesnt-suck-for-java-scala
+
+

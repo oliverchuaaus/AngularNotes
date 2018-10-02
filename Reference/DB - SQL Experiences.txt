@@ -1,0 +1,25 @@
+Experiences:
+
+Error:
+Some records are not showing up in the report	
+Cause:
+Joining on nullable fields excludes some records.
+Fix:
+use LEFT JOIN instead of JOIN
+
+Query to get records between start and end date
+and date range check where date has time component
+and start and end date doesn't	
+Answer: date >= start and date < end+1
+
+Determine if two Date Ranges Overlap
+If @StartDate1 <= @EndDate2 AND @StartDate1 <= @EndDate1 then the date ranges overlap
+Source: http://datacogs.com/datablogs/archive/2004/10/21/170.aspx"
+
+Way to delete all tables:
+Begin
+for c in (select table_name from user_tables) loop
+execute immediate ('drop table '||c.table_name||' cascade constraints');
+end loop;
+End;
+Source: https://forums.oracle.com/forums/thread.jspa?threadID=614090

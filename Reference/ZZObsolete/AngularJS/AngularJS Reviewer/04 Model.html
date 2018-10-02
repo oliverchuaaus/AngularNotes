@@ -1,0 +1,29 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<style>
+input.ng-invalid {
+	background-color: pink;
+}
+</style>
+
+
+
+
+<div ng-app="myApp" ng-controller="myCtrl">
+	<form name="myForm">
+		Email: <input type="email" ng-model="email" name="myEmail"> <span
+			ng-show="myForm.myEmail.$error.email">Not a valid e-mail
+			address</span>
+</div>
+
+<script>
+	var app = angular.module("myApp", []);
+	app.controller("myCtrl", function($scope) {
+		$scope.name = "";
+	});
+</script>
+
+</form>
+</html>

@@ -1,0 +1,139 @@
+MongoDB in Action
+
+
+How to Install:
+https://www.mkyong.com/mongodb/how-to-install-mongodb-on-windows/
+
+1. Add C:\Work\MongoDB\Server\3.4\bin to PATH
+
+2. Create following files:
+C:\Work\MongoDB\Server\3.4\config\mongo.config
+C:\Work\MongoDB\Server\3.4\data
+C:\Work\MongoDB\Server\3.4\log
+
+3. Add to mongo.config:
+##store data here
+dbpath=C:\Work\MongoDB\Server\3.4\data
+##all output go here
+logpath=C:\Work\MongoDB\Server\3.4\log\mongo.log
+##log read and write operations
+diaglog=3
+
+4. Run as windows service
+mongod.exe --config C:\Work\MongoDB\Server\3.4\config\mongo.config --install
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Nomenclature:
+schema: database
+table: collection
+record: document
+
+
+CRUD:
+Create collection and document:
+db.users.insert({username:"smith"})
+db.users.insert({username:"jones"})
+
+Select documents:
+db.users.find()
+db.users.count()
+
+Updating documents:
+db.users.update({username:"smith"},{$set:{country:"Canada"}})
+db.users.update({username:"smith"},{$unset:{country:1}})
+db.users.update({username:"smith"},
+{$set: {favorites: 
+    {
+      cities: ["Chicago", "Cheyenne"],
+      movies: ["Casablanca", "Rocky"]
+    }}
+})
+
+Add to existing array:
+db.users.update({username:"jones"},
+{$addToSet: {"favorites.movie": "Superman"}
+})
+
+db.users.update({username:"jones"},
+{$push: {"favorites.movie": "Superman"}
+})
+$addToSet prevents duplicates
+$push doesn't.
+
+Deleting collections:
+Deleting documents:
+db.users.remove({username:"jones"})
+
+Dropping collections:
+db.users.drop()
+
+
+
+
+INDEXES:
+
+Create 200k documents:
+for(i=0; i<200000; i++) {
+db.numbers.save({num: i});
+}
+
+Select documents 
+db.numbers.find() - default shows 20 at a time
+db.numbers.find({num:500})
+db.numbers.find({num:{"$gte":500}})
+db.numbers.find({num:{"$gte":500, "$lte":507}})
+
+
+Explain plan:
+db.numbers.find({num:500}).explain()
+BasicCursor implies no index used. 
+BtreeCursors implies index used.
+nScanned = # of records implies full table scan
+
+Add index:
+db.numbers.ensureIndex({num:1})
+db.numbers.ensureIndex({num:1},{unique:true})
+
+Get indexes
+db.numbers.getIndexes()
+
+
+ADMIN:
+Show DBs:
+show dbs
+
+Drop DB:
+use mydb
+db.dropDatabase()
+
+Show Collections:
+show collections
+
+Stats:
+db stats:
+db.stats()
+collection stats:
+db.numbers.stats()
+
+db.stats - without parenthesis, shows function body
+
+
+
+

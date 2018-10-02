@@ -1,0 +1,59 @@
+Enterprise: BPM, ESB	
+UI:ReactJS, Angular2JS, 
+	NodeJS(best practices, code patterns, tool chains)
+	http://cwbuecheler.com/web/tutorials/2014/restful-web-app-node-express-mongodb
+Web: Bootstrap, Less, SCSS
+Aspects: Spring Email, Spring Security, JSR303 Validation,
+Amazon AWS (EC2, VPC, EBS, SQS, SES, S3, RDS and CloudFormation)
+Android: Android SDK
+JVM: Groovy, Ruby, Rails
+
+
+
+Add to Documentation:
+Angular
+$stateparams
+callback hell
+$q.defer/promise
+http://www.codelord.net/2015/09/24/$q-dot-defer-youre-doing-it-wrong/
+service vs factory vs provider
+http://www.simplygoodcode.com/2015/11/the-difference-between-service-provider-and-factory-in-angularjs/
+
+SQL:
+Normalization
+Query hints
+10g Analytic Functions - PARTITION BY
+Explain plan
+profiling
+
+Linux:
+CSS:
+HTML:
+
+JPA:
+1. Cache
+2. Cascades
+3. Queries
+4. Native Queries
+5. Union in JPQL
+
+W3c schools to doc:
+HTML:
+1. HTML
+2. CSS
+Scripting:
+1. Javascript
+2. HTML DOM
+3. AJAX
+4. JQuery
+XML:
+1. XML
+2. XML DOM
+3. XSLT
+4. Schema
+5. XSL-FO
+Web Services:
+1. Web Services
+2. WSDL
+3. SOAP
+

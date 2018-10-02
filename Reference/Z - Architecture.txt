@@ -1,0 +1,69 @@
+How to structure project
+How to name packages, classes, variables, i.e. checkstyle settings
+How to manage db changes
+How to implement auditing, logging
+How to manage unit testing
+How to manage branching, releases
+
+Package by feature, not layer
+Source: http://www.javapractices.com/topic/TopicAction.do?Id=205
+
+Best practices:
+1. Automated build
+Without it, people can break the build without realizing it.
+Hard to make sure when doing a release that the build is okay.
+Difficult to trace who broke it and therefore who should fix what
+Caveats:
+It's possible to break build of not your fault
+All unit tests pass but error in jsp goes undetected, app will be unusable.
+Manual build before checking in might take too long.
+Too much unit testing will slow down build process	
+
+Testing:
+Unit test 
+	mock objects	
+	dao only
+	complicated methods
+Integration test	
+	from service to dao
+	coverage tests
+	mock services
+System test	
+	critical paths
+	other validations
+
+	
+
+
+
+
+Continuous Integration Stack:
+	
+Tools:
+Build Tools: Maven, Gradle
+Code Quality: Jacoco - code coverage, cpd - copy paste detector, findBugs, checkstyle
+Continuous Build: Jenkins
+Issue Tracking: JIRA
+Code Review Tool: Crucible	
+Version Control: Subversion, GIT 
+DB Tool: SQLDeveloper
+Webapp Functional Test: Selenium
+IDE: Eclipse
+
+Servers:
+DB: MySQL, Oracle XE, SQL Server, DB2
+MQ: IBM MQ
+Web Servers: Tomcat, JBoss
+
+Frameworks:
+ORM: Hibernate, JPA
+Spring: Dependency Injection, Transaction Management, Spring Scheduler
+UI: AngularJS2
+Webapp Aspects: Logging, Profiling, Internationalization, Tiles
+Web Techs: HTML, CSS, Javascript, JQuery, Ajax, JSON, 
+Web Services: JAX-WS, JAX-RS, JSON
+TDD: JUnit, TestNG, Mockito, JMockit
+	http://stackoverflow.com/questions/22697/whats-the-best-mock-framework-for-java
+
+
+

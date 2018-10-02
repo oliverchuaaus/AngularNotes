@@ -1,0 +1,428 @@
+JSF
+
+Advantages over MVC Using RequestDispatcher
+a. custom gui controls
+b. event handling - easier to invoke Java code when buttons clicked.
+c. managed beans - setting fields from param is easier
+d. ajax support - no explicit javascript
+e. form field conversion and validation - redisplay page with errors
+f. page templating - built-in templating, unline Tiles
+
+Advantages over Struts
+a. custom components - 3rd party components
+b. support for other display techs - not limited to http/html
+c. Access to beans by name - insread of redirection
+d. official part of jee
+e. expression language
+f. simpler controller and bean definitions - no extends
+g. simpler config
+however,
+a. self submit approach - page.jsp and page.do vs. page.jsf
+b. weaker validation
+c. lack of client side validation
+
+
+
+
+
+
+
+
+
+Managed Bean:
+default scope: Request
+default name: Java Bean name
+Managed Property:
+something like Spring dependency injection of another scoped bean
+
+Navigation:
+If no explicit entry in faces-config.xml
+target will be returnString.xhtml in same folder.
+To redirect, returnString?faces-redirect=true - only for session scoped beans, otherwise params are lost.
+
+Scopes:
+application	@ApplicationScoped
+session		@SessionScoped
+request		@RequestScoped
+view		@ViewScoped		for ajax in same page
+none		@NoneScoped		for beans used by other beans in scope
+custom		@CustomScoped		code controls lifecycle of bean
+
+Access to Request and Response
+ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+HttpServletRequest request = (HttpServletRequest)context.getRequest();
+
+Widgets
+Text: You can use chained properties like mybean.prop1.prop2.prop3
+Checkbox: selectBooleanCheckbox
+Select: selectOneMenu
+provide List<SelectItem> or SelectItem[] method
+
+
+
+
+
+
+
+
+
+
+faces config declare:
+a. beans
+b. navigation rules
+<navigation-rule>
+  <from-view-id>page1.xhtml</from-view-id>
+  <navigation-case>
+    <from-outcome>2</from-outcome>	
+    <to-view-id>page2.xhtml</from-view-id>
+  </navigation-case>	
+</navigation-rule>
+
+Wildcard:
+* from-view-id 		any page
+omit from-outcome	all except null, which redisplays page.
+same from-outcome	use if and use EL inside tags to differentiate between cases
+
+
+Static Navigation
+<h:commandButton action="page2"/>
+this button will go to page2, without calling any ManagedBean
+
+
+
+
+
+Expression Language
+alternative to using scriptlets
+
+samples:
+a. #{myBean.myField}
+b. <h:inputText value="#{myBean.myField}" />
+c. #{myBean.myList[0].myField}
+d. #{myHashMap["NSW"]} OR #{myHashMap.NSW} - better to use brackets, not all keys are valid java variables.
+e. #{myBoolean ? "TRUE":"FALSE"}
+
+three uses of #{}
+a. output value
+b. input value
+c. method call
+
+
+
+
+Repeat
+<ui:repeat var="element" value="myBean.myList">
+	#{element.field1}
+</ui:repeat>
+
+
+
+
+
+
+
+I18N
+a. Add messages.properties in src/main/resources/package1
+b. Add entry in faces-config.xml
+<application>
+	<resource-bundle>
+		<base-name>package1.messages</base-name>
+		<var>msgs</var>
+	</resource-bundle>
+</application>
+c. Use in xhtml: #{msgs.greeting}
+d. parameterized message: 
+<h:outputFormat value="#{msgs.greeting}">
+	<f:param value="firstParamValue"/>
+	<f:param value="secondParamValue"/>
+</h:outputFormat>
+e. locale
+messages.properties
+messages_es.properties
+
+
+
+
+Relative URLS:
+a. Javascript
+<h:outputScript name="script.js" library="folder_under_resources" />
+b. Images
+<h:graphicImage name="image.png" library="folder_under_resources"/>
+c. Stylesheet
+<h:outputStylesheet name="style.css" library="folder_under_resources" />
+d. Href
+<a href="#{request.contextPath}/mypage.jsf"/>
+
+
+
+
+
+
+View Params
+a. Read request params and set as bean properties
+<f:viewParam name="param1" value="myBean.prop1"/>
+b. Send request params to JSF page
+<h:link   outcome="somethingUrl?param1=val1&amp;param2=val2" value="Click Link"/>
+<h:button outcome="somethingUrl?param1=val1&amp;param2=val2" value="Click Button"/>
+c. POST-Redirect-GET
+faces-redirect=true	or explicit navigation
+redirect=true&amp;includeViewParams=true to not lose request parameters in url during redirect.
+
+
+
+
+
+
+
+
+
+
+Event Handling
+2 types of event handlers:
+a. action controllers
+	fire after bean populated ?
+	fire after validation
+	return string contains target page
+b. event listener
+	fire before bean populated?
+	bypass validation
+	doesn't affect navigation
+
+2 types of event listeners:
+a. ActionListener
+	commandButton
+	commandLink
+b. ChangeListener
+	selectOneMenu
+	selectOneRadio
+	selectBooleanCheckbox
+	inputText
+	
+Using Action Listeners:
+action controller: commandButton action="#{myBean.method()}"
+public String method(){}
+
+action listener: commandButton actionListener="#{myBean.method()}" immediate="true"
+public void method(ActionEvent event){}
+
+Using Change Listeners:
+submit not called automatically, so need to add onClick="submit()"
+
+action listener: selectBooleanCheckbox valueChangeListener="#{myBean.method()}" immediate="true" onClick="submit()"
+public void method(ValueChangeEvent event){}
+
+
+
+
+
+
+
+Ajax in JSF
+Advantages
+Client:
+no need to integrate javascript to fields.
+no need to write javascript
+Server:
+no need to write a servlet that reads request and formats response
+Limitations:
+cannot use in attributes cause it adds a span tag
+
+<h:commandButton action="">
+<f:ajax render="id1,id2" execute="id3,id4" event="blah" onevent="jsHandler">
+</h:commandButton>
+
+render - id of output field to redisplay
+execute - id of input fields - can be @this (enclosing element), @form (enclosing form), @none, @all (enclosing page)
+event - dom event (keyup, blur) e.g. google autocomplete, every keyup serves up a list of suggestions
+onevent - js function to run when event is fired
+
+
+
+Sample apps:
+a. related drop downs - will revert to submit if no ajax.
+b. waiting to load icon
+
+
+
+
+
+
+
+Validation
+4 types
+a. manual
+b. implicit automatic
+c. explicit automatic
+d. own validation method
+
+Manual - validating multiple fields 
+a. use strings properties for bean
+b. do validation in setter method and/or action controller
+c. return null to redisplay page
+d. create custom messages and store in FacesMessage
+e. use h:message to display error messages
+
+Implicit automatic
+a. use int, Date, etc for properties for bean, or mark as required
+b. Auto redisplays if there are errors.
+c. use h:message to display field-specific error messages 
+
+Explicit automatic
+a. f:validateLength, f:validateDoubleRange, f:validateLongRange, f:validateRegex
+b. Auto redisplays if there are errors.
+c. use h:message to display field-specific error messages 
+
+Own Validation method
+a. Create FacesMessage, wrap in ValidatorException
+
+
+
+To create message:
+FacesMessage msg = new FacesMessage("formId:elementId","Error: something something");
+FacesContext.getCurrentInstance.addMessage(msg);
+
+To display message:
+<h:errorMessages/>
+OR <h:errorMessage for="elementId"/>
+
+To override conversion error message, use converterMessage attribute
+To override required error message, use requiredMessage attribute
+
+Precedence
+a. required
+b. conversion
+c. immediate = true to skip validation
+
+Own Validator Method
+<h:inputText value="#{myBean.text}" validator="#{myBean.validateField}"
+
+public void validateField(FacesContext context, UIComponent componentToValidate, Object value){
+	FacesMessage msg...
+	throw new ValidatorException(msg);
+}
+
+
+
+
+
+
+
+Data Tables
+<h:dataTable var="bucket" value="#{myBean.bucketList}">
+  <f:facet name="caption">Bucket List</f:facet>
+  <h:column>
+    <f:facet name="header">Name</f:facet>
+    #{bucket.name}	
+  </h:column>
+</h:dataTable>
+
+other dataTable attributes
+styleClass
+captionClass
+headerClass
+footerClass
+rowClasses
+columnClasses
+
+
+
+
+
+
+
+
+
+
+
+Composite Components
+Composite File:
+resources/utils/myComponent.xhtml
+<composite:interface>
+  <composite:attribute name="attr1" />
+  <composite:attribute name="attr2" />
+</composite:interface>
+
+<composite:implementation>
+This is a test
+attr1 = #{cc.attrs.attr1}
+attr2 = #{cc.attrs.attr2}
+attr3 = #{cc.parent.attrs.attr3}
+</composite:implementation>
+
+Main File:
+some-page.xhtml
+<html... xmlns:utils="http://java.sun.com/jsf/composite/utils">
+
+<utils:myComponent attr1="" attr2="">
+My contents
+</utils:myComponent>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Facelet templating:
+a. Template file - can be <html> or a snippet <ui:composition>
+put in WEB-INF, they are not supposed to be used by end-user.
+use <ui:include> to mark sections that can be overridden.
+b. Client file
+specify template by using <ui:composition>
+override sections by using <ui:define>
+c. Snippet file
+used when a section of code is reused in some but not all pages.
+put in WEB-INF, they are not supposed to be used by end-user.
+to insert snippet in client file, use <ui:insert>
+a snippet based on a template can be inserted into another client file as a snippet, 
+and this can be repeated to do composition.
+
+
+
+
+
+
+
+
+
+
+Experiences:
+1. mypage.jsf fails. Error page says mypage.jsp not found.
+Reason: should have been mypage1.jsf.
+If a non-existent jsf page is accessed, error page will show *.jsp not found
+
+2. managedbean not found when page action clicked.
+Reason: class is not compiled to class when in resources folder.
+When project is created via maven webapp archetype, 
+no java/main/source folder created, only java/main/resource.
+Solution: Create java/main/source folder and put class inside.
+
+Reason: class is new
+Solution: restart server
+
+3. 
+
+Eclipse - JSF
+1. Eclipse debugger always blocks on ThreadPoolExecutor 
+http://stackoverflow.com/questions/6290470/eclipse-debugger-always-blocks-on-threadpoolexecutor-without-any-obvious-excepti
+Solution: Preferences > Debug pane under Java in the tree hierarchy, has the option titled "Suspend execution on uncaught exceptions", which can be unchecked.
+
+2. NLS missing message: CANNOT_FIND_FACELET_TAGLIB in: org.eclipse.jst.jsf.core.validation.internal.facelet.messages
+after copying xhtml files to another folder.
+http://stackoverflow.com/questions/6594482/eclipse-cant-find-facelet-tag-library-for-uri-http-java-sun-com-jsf-html
+Solution: Open close project.
+
+3. Jboss 5 does not work.
+Use Jboss 6 or later for JSF 2.0 to work.
+
+4. Jboss Tools
+http://download.jboss.org/jbosstools/updates/development/indigo/

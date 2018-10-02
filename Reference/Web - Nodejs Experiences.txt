@@ -1,0 +1,19 @@
+1. cannot run npm with proxy, proxy error:
+update c:\Users\kchua\.npmrc
+by running npm config edit in cmd: 
+proxy=http://kchua:Password01@10.199.48.47:8080
+proxy-https=http://kchua:Password01@10.199.48.47:8080
+strict-ssl=false
+registry=http://registry.npmjs.org/
+
+2. typings fail due to proxy:
+copy .npmrc to .typingsrc
+typings not using .npmrc to get proxy, rather .typingsrc
+Source: https://github.com/typings/typings/issues/463
+
+3. Error: EISDIR: illegal operation on a directory, read
+delete CVS folder in C:\Users\kchua\workspace8.5\ftr-ui\src\main\webapp\node_modules\browser-sync-ui\templates\directives
+
+4. Error: bower ECONNREFUSED
+http://stackoverflow.com/questions/21750804/bower-calls-blocked-by-corporate-proxy
+c:\users\kchua\.bowerrc

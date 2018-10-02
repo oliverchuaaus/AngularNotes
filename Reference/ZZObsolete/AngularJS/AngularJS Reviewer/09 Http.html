@@ -1,0 +1,31 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<body>
+	<div ng-app="myApp" ng-controller="myCtrl">
+
+		<p>a. Display html contents and status code, use method
+		<p>Webpage: {{myHttp}}
+		<p>Status: {{myStatusCode}}
+	</div>
+</body>
+
+<script>
+	var app = angular.module("myApp", []);
+	app.controller("myCtrl", function($scope, $http) {
+		//a
+		$http({
+			method : "GET",
+			//url : "08 webpage.html"
+			url: "http://www.w3schools.com/angular/customers.php"
+		}).then(function success(response) {
+			$scope.myHttp = response.data;
+			$scope.myStatusCode = response.status;
+		}, function error(response) {
+			$scope.myStatusCode = response.status;
+		});
+	});
+</script>
+
+</html>

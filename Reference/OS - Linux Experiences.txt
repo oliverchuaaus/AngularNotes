@@ -1,0 +1,6 @@
+Cannot delete directory with too many files
+https://linuxconfig.org/bash-bin-rm-argument-list-too-long-solution
+http://g33kinfo.com/info/archives/423
+
+Tomcat shutdowns randomly
+http://www.77dev.com/2014/07/tomcat-randomly-shuts-down-without-any-logs.html

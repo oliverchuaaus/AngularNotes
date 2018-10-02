@@ -1,0 +1,41 @@
+1. Create new app, 
+Create new components (parent, child)
+Pass in array parameter to component (app to parent) 
+and array element to child (parent to child)
+Emit event from parent to app
+
+2. Create form
+Create FormsModule and ReactiveFormsModule with one field named sku.
+Implement required for sku field.
+Show error for field.
+Disable Submit button until form is valid.
+Implement custom validation
+
+3. submit get request to rest service
+update page asynchronously, with loading fa spinner icon
+handle error and completion
+reset text when resubmitted
+
+4. create routes: home, about, contact
+add param to contact
+add nested routes for about: about1, about2
+create login form in home component, 
+create dummy login service 
+add protected component
+
+
+
+
+
+
+n. Other forms
+text area
+select/option
+radio button
+submit
+reset
+file upload
+
+n.
+youtube search
+flickr search

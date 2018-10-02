@@ -1,0 +1,38 @@
+Internal script
+<script type="text/javascript">
+document.write("<h1>This is a header</h1>");
+</script>
+
+External script
+<script src="xxx.js"></script>
+
+Vars
+var x;
+var x=100;
+
+Alert
+alert('DEBUG: ');
+
+Confirm
+var answer = confirm('Press Ok or Cancel');
+//answer can be true or false
+
+Prompt
+var answer = prompt('Enter answer');
+//answer is free text
+
+
+2 ways to Make elements invisible
+http://stackoverflow.com/questions/5865408/javascript-css-show-and-hide-form-elements
+
+//Display
+document.getElementById(id).style.display = "none";
+document.getElementById(id).style.display = "block";
+//Visibility
+document.getElementById(id).style.visibility= "hidden";
+document.getElementById(id).style.visibility= "visible";
+
+display collapses empty space, visibility does not
+
+
+function parameters are optional

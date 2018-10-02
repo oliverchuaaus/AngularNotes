@@ -1,0 +1,57 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<body>
+	<div ng-app="myApp" ng-controller="myCtrl">
+
+		<p>a. Display absolute url: {{url}}
+		<p>b. Display text after timeout: {{myTimeout}}
+		<p>c. Display current time: {{myInterval}}
+		<p>d. Display html contents: {{myHttp}}
+		<p>e. Call custom service: {{myCustomService}}
+		<p>f. Call custom filter: {{15|myCustomFilter}}
+	</div>
+
+</body>
+
+<script>
+	var app = angular.module("myApp", []);
+	app.controller("myCtrl", function($scope, $location, $timeout, $interval,
+			$http, numberFunctions) {
+		//a
+		$scope.url = $location.absUrl();
+		//b
+		$timeout(function() {
+			$scope.myTimeout = "MyTimeout";
+		}, 1000);
+		//c
+		$interval(function() {
+			$scope.myInterval = new Date();
+		}, 1000);
+		//d
+		$http.get("08 webpage.html").then(function(response) {
+			$scope.myHttp = response.data;
+		});
+		//e
+		$scope.myCustomService = numberFunctions.bin(15);
+	});
+
+	app.service("numberFunctions", function() {
+		this.hex = function(a) {
+			return a.toString(16);
+		}
+		this.bin = function(a) {
+			return a.toString(2);
+		}
+	});
+
+	app.filter("myCustomFilter", [ 'numberFunctions',
+			function(numberFunctions) {
+				return function(a) {
+					return numberFunctions.bin(a);
+				}
+			} ]);
+</script>
+
+</html>

@@ -1,0 +1,85 @@
+Java Messaging Service
+
+1. Types of Messaging Domains
+Point to point - queue
+Publish/Subscribe - topic
+
+2. API
+Administered Objects - ConnectionFactory, Destinations
+Connection
+JMS Sessions - can create:
+	Message producers
+	Message consumers
+	Messages
+	Queue browsers
+	Temporary queues and topics
+Messages	
+
+//ConnectionFactory
+@Resource(mappedName="jms/ConnectionFactory")
+private static ConnectionFactory connectionFactory;
+
+//Destinations
+@Resource(mappedName="jms/Queue")
+private static Queue queue;
+
+@Resource(mappedName="jms/Topic")
+private static Topic topic;
+
+//Connection
+Connection connection = connectionFactory.createConnection();
+
+//JMS Session
+//params - not transacted, message acknowledge
+Session session = connection.createSession(false,
+Session.AUTO_ACKNOWLEDGE);
+
+//producers
+MessageProducer producer1 = session.createProducer(dest);
+MessageProducer producer2 = session.createProducer(queue);
+MessageProducer producer3 = session.createProducer(topic);
+
+producer.send(message);
+
+//Consumers
+MessageConsumer consumer = session.createConsumer(dest);
+MessageConsumer consumer = session.createConsumer(queue);
+MessageConsumer consumer = session.createConsumer(topic);
+//OR MessageConsumer consumer = session.createConsumer(topic,"NewsType='Gossip'");
+
+connection.start();
+Message m = consumer.receive();
+//OR Message m = consumer.receive(1000); // time out after a second
+
+
+
+
+
+//MessageListener
+class Listener implements MessageListener
+{
+	public void onMessage(Message m)
+	{
+		
+	}
+}
+
+Listener myListener = new Listener();
+consumer.setMessageListener(myListener);
+
+
+
+//Messages
+headers - predef props
+properties - custom props
+bodies
+	TextMessage
+	MapMessage
+	BytesMessage	
+	StreamMessage	
+	ObjectMessage
+	Message
+	
+//Queue Browser	- for queue only
+QueueBrowser browser = session.createBrowser(queue);	
+

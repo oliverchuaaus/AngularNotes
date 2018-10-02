@@ -1,0 +1,47 @@
+Use Case Diagram	
+displays the relationship among actors and use cases
+Actor - stick figure
+Use Case - oval with Use case Name
+
+
+Class Diagram	
+models class structure and contents using design elements such as classes, packages and objects. 
+It also displays relationships such as containment, inheritance, associations and others.
+Interface in italics or uses stereotype e.g.<<interface>>, Object diagram has underline
+
+
+Sequence Diagram	
+Object diagram in Boxes with swimlanes extending down.
+arrows from one object's swimlane to another represents method calls.
+Sequence is important.
+
+
+Collaboration Diagram	
+No particular order. Objects are important.
+State Diagram	"Rounded box with StateName
+do/action -> Activity
+arrow -> Transition (can have condition)
+can have superstates
+
+Activity Diagram	
+workflow of the system
+start - filled circle
+activity in rounded squares, connected by arrows
+decisions as diamonds
+fork and join as bars across activity arrows.
+End - filled circle within an unfilled circle
+
+
+Physical Diagram	
+Deployment - Nodes/computers as 3d boxes connected by arrows
+Component - Box with three lines sticking out on the left.
+They are inside nodes that are 3d boxes.
+	
+	
+Class relationship:
+Association	arrow with multiplicity at both ends
+Generalization	Unfilled Arrowhead pointing from subclasses to superclass
+Aggregation	unfilled diamond on the parent
+Composition	filled diamond on the parent
+	
+Source:	http://atlas.kennesaw.edu/~dbraun/csis4650/A&D/UML_tutorial/diagrams.htm

@@ -1,0 +1,34 @@
+$scope.search ="";
+
+$scope.clearCriteria = function(){
+  $scope.search.transactionId ="";
+}
+Getting error: TypeError: Cannot assign to read only property 'transactionId'
+
+Fix:
+$scope.search = {
+    transactionId : "",
+    status : "",
+    startDateObj: null,
+    endDateObj: null
+};
+
+
+
+Angular experiences:
+
+Search:
+a. Report with search criteria, sorting and pagination. 
+b. Used Date format filter
+c. Used directive to reuse a common widget
+d. View History records and details
+e. Using spinner for slow pages
+f. Dynamic select widgets that are related
+
+Entry:
+a. Data entry with bulk entry, or single row update or single record with tabs.
+b. Different input types like number, email.
+c. Error from RESTful service shown on screen and non-modal windows using pnotify.
+d. Text field, text area, select/options, buttons, modal windows
+e. Used directives for date entry widget and auto suggest
+f. OneToMany relationship

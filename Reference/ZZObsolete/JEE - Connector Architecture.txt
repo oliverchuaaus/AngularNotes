@@ -1,0 +1,70 @@
+Resource Adapter
+
+ra = jdbc driver
+
+        int count = -1;
+        try {
+1           Connection con = getCCIConnection();
+		
+	    Context ic = new InitialContext();
+            user = (String) ic.lookup("java:comp/env/user");
+            password = (String) ic.lookup("java:comp/env/password");
+            ConnectionFactory cf = (ConnectionFactory) ic.lookup("java:comp/env/CCIEIS");
+             ConnectionSpec spec = new CciConnectionSpec(user, password);
+	    Connection con = cf.getConnection(spec);
+
+2           Interaction ix = con.createInteraction();
+3           CciInteractionSpec iSpec =
+               new CciInteractionSpec();
+4           iSpec.setSchema(user);
+            iSpec.setCatalog(null);
+            iSpec.setFunctionName("COUNTCOFFEE");
+5           RecordFactory rf = cf.getRecordFactory();
+6           IndexedRecord iRec =
+               rf.createIndexedRecord("InputRecord");
+7           Record oRec = ix.execute(iSpec, iRec);
+8           Iterator iterator = 
+               ((IndexedRecord)oRec).iterator();
+9           while(iterator.hasNext()) {   
+                Object obj = iterator.next();
+                if(obj instanceof Integer) {
+                    count = ((Integer)obj).intValue();
+                }
+                else if(obj instanceof BigDecimal) {
+                    count = ((BigDecimal)obj).intValue();
+                }
+            }
+10          closeCCIConnection(con);
+        }catch(ResourceException ex) {
+            ex.printStackTrace();
+        }
+        return count;
+    }
+
+
+
+Connection con = DriverManager.getConnection
+           ( "jdbc:myDriver:wombat", "myLogin","myPassword");
+			  
+Statement stmt = con.createStatement();
+ResultSet rs = stmt.executeQuery("SELECT a, b, c FROM Table1");
+while (rs.next()) {
+	int x = rs.getInt("a");
+	String s = rs.getString("b");
+	float f = rs.getFloat("c");
+	}
+
+JDBC		CCI
+DriverManager	ConnectionFactory, ConnectionSpec	
+Connection	Connection
+Statement	Interaction, CciInteractionSpec
+
+
+ConnectionFactory: Provides an application component with a Connection instance to an EIS.
+Connection: Represents the connection to the underlying EIS.
+ConnectionSpec: Provides a means for an application component to pass connection-request-specific properties to the ConnectionFactory when making a connection request.
+Interaction: Provides a means for an application component to execute EIS functions, such as database stored procedures.
+InteractionSpec:Holds properties pertaining to an application component’s interaction with an EIS.
+Record: The superclass for the various kinds of record instances. Record instances can be MappedRecord, IndexedRecord, or ResultSet instances, all of which inherit from the Record interface.
+RecordFactory: Provides an application component with a Record instance.
+IndexedRecord: Represents an ordered collection of Record instances based on the java.util.List interface.

@@ -1,0 +1,24 @@
+Error:
+No bean named 'MyServiceImpl' is defined	
+Cause
+Wrong name. 
+Fix:
+Should be myServiceImpl
+
+Error:
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'myServiceImpl': 
+Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: 
+Could not autowire field: private org.kristoffer.dao.MyDao org.kristoffer.service.impl.MyServiceImpl.dao; 
+nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: 
+No matching bean of type [org.kristoffer.dao.MyDao] found for dependency: 
+expected at least 1 bean which qualifies as autowire candidate for this dependency. 
+Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}	
+Cause:
+No Component Tag in MyDaoImpl
+Fix:
+Add @Component
+
+
+Spring annotation properties file
+http://stackoverflow.com/questions/9259819/how-to-read-values-from-properties-file
+

@@ -1,0 +1,9 @@
+Jackson json to list of Objects
+List<MyClass> myObjects = mapper.readValue(jsonInput, new TypeReference<List<MyClass>>(){});
+List<MyClass> myObjects = mapper.readValue(jsonInput, mapper.getTypeFactory().constructCollectionType(List.class, MyClass.class));
+http://stackoverflow.com/questions/6349421/how-to-use-jackson-to-deserialise-an-array-of-objects
+
+Json View not adding any fields
+Reason: @JsonView is in 2 packages:
+	a. org.codehaus.jackson.map.annotate.JsonView (correct)
+	b. com.fasterxml.jackson.annotation.JsonView (wrong) 

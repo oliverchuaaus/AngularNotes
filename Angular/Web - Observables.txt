@@ -1,0 +1,9 @@
+http://blog.angular-university.io/functional-reactive-programming-for-angular-2-developers-rxjs-and-observables/
+
+var obs = Observable.interval(100).take(5);
+obs.subscribe((num)=>{console.log(num)});
+OR 
+let obs = Observable.interval(100).take(5).do(num => console.log(num));
+obs.subscribe();
+
+if no subscriber, no output, because it is cold, not hot

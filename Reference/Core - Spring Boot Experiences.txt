@@ -1,0 +1,7 @@
+Cannot determine embedded database driver class for database type NONE
+Caused by:
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+Fix: Delete dependency

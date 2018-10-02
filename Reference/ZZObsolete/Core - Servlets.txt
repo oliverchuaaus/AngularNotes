@@ -1,0 +1,89 @@
+Basic servlets
+
+Scope Objects
+Web context	ServletContext
+Session		HttpSession
+Request		HttpServletRequest
+Page		JspContext
+
+PRG - post/redirect/get
+
+JSTL - JSP Standard tag library c and fmt.
+
+Advanced servlets
+2 types of web applications
+presentation-oriented
+service-oriented
+
+web Module packaging
+Assembly root
+	Jsp pages, etc.
+	<WEB-INF>
+		web.xml
+		<lib>
+		<classes>
+		<tags>
+
+Filters can perform these tasks:
+query the request
+block the request response pair from passing any further
+modify request headers and data
+modify response headers and data
+interact with external resources
+
+Filtering API
+Filter
+	doFilter()
+	init()
+	destroy()
+FilterChain
+FilterConfig
+
+JSP
+Jsp fragment is .jspf
+
+Unified expression language
+union of JSP 2.0 EL and JSF 1.0 EL
+
+features of UEL:
+dynamically read application data stored in JavaBeans.
+dynamically write data from forms into JavaBeans.
+invoke static methods
+dynamically perform arithmetic operations
+
+Kinds of expressions
+immediate or deferred evaluation expressions ${} vs #{}
+value or method expression
+Rvalue or Lvalue expression
+
+Defered expressions can be value of method expressions
+Value expressions can be rvalue or lvalue
+
+VALUE:
+customer.name is equal to customer["name"]
+composite expressions - value="some#{expr}#{expr}text#{expr}"
+
+METHOD:
+value="#{bean.method}"
+
+Functions vs. Methods
+Functions are static method that return a value.
+Functions statically defined at translation time.
+Methods are dynamically defined at runtime.
+Function params and invocations are part of an EL expression
+Method params are part of the tag definition
+
+Reusing content in JSP pages
+include directive	<%@ include file="banner.jspf" %>
+preludes and codas	
+jsp:include element	<jsp:include page="response.jsp"/>
+
+
+Types of atributes:
+simple
+fragment - portion of jsp code passed to tag handler
+dynamic - attributes not defined in tag def
+
+
+
+

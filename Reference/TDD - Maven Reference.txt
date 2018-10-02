@@ -1,0 +1,63 @@
+OutOfMemoryError
+https://cwiki.apache.org/confluence/display/MAVEN/OutOfMemoryError
+set MAVEN_OPTS=-Xmx512m -XX:MaxPermSize=128m
+
+Maven versions
+<groupId>junit</groupId>
+<artifactId>junit</artifactId>
+<version>[4.12,)</version>
+
+<groupId>commons-logging</groupId>
+<artifactId>commons-logging</artifactId>
+<version>[1.2,)</version>
+
+<groupId>org.springframework</groupId>
+<artifactId>org.springframework.context</artifactId>
+<version>4.1.1.RELEASE</version>
+
+Maven:
+1. Why do we need to specify M2_HOME? Who's using it?
+2. How to do config? profiles vs. properties
+3. If multiple jars in an ear file, how to package?
+4. How to consolidate reports for multi-module project?
+
+Questions
+1. What's a good reference to learn Maven
+Maven: The Definitive Guide (free online book)
+http://www.sonatype.com/books/maven-book/
+
+2. How to integrate Maven with Eclipse?
+m2eclipse. http://m2eclipse.sonatype.org/
+
+3. What is the dependency resolution process?
+Answer: local folder, local repo, global repo in settings.xml TODO: Verify
+
+4. In m2eclipse, how does it resolve dependencies in eclipse?
+Does it use project dependencies or the jar files?
+Answer: It uses its own Maven dependencies list. 
+if current version, it refers to the project folder directly, 
+if not current version, it refers to the jar in repo, 
+but this is suspect, since why is it referencing an old version?
+
+Best practices
+1. It will be much easier to understand the relationship between modules if submodules are prefixed with the name of the parent.
+Example: Parent is p1, Submodules are sm1 and sm2.
+use p1, p1-sm1, p1-sm2. Otherwise in Eclipse, you'll only see p1, sm1 and sm2. 
+2. Easier to check out if all projects are under one folder. 
+Also if all projects share one version, easiest to change the top one and the rest would follow.
+3. Submodules not to have version specified, so that it inherits the parent version.
+This will make maintenance when upgrading to a higher version easier.
+4. When deploying, can use org.apache.maven.plugins maven-release-plugin to perform releases. 
+It tags the release for you and updates the version, interactive to enter release version and next version.
+Version in branch/trunk is SNAPSHOT, then renamed to actual version during release.
+target folder is created containing changed pom version.
+5. When there is no top project, dependencies on other modules rely on jars rather than project,
+so when top component changes, it has to be maven installed to regenerate jar files.
+
+
+
+
+
+
+
+

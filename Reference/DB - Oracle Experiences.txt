@@ -1,0 +1,7 @@
+Error:
+ClassCastException: Cannot cast oracle.sql.BLOB (id=196) to oracle.sql.BLOB	
+Cause:
+JDBC driver dependent code should no tbe used.
+Fix:
+Just use ResultSet#getBinaryStream() and PreparedStatement#setBinaryStream().
+http://stackoverflow.com/questions/379594/why-i-cannot-cast-oracle-blob-from-native-java-blob

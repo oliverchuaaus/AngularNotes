@@ -1,0 +1,199 @@
+Simple classes annotated with @Entity
+Persistent Fields or Persistent Properties annotated with @Column
+
+How to declare relationship?
+OneToOne
+OneToMany
+ManyToOne
+ManyToMany
+SecondaryTables
+
+OneToOne
+a. shared pk
+	@PrimaryKeyJoinColumn
+b. own pk, fk
+c. own pk, fk in table
+
+OneToMany
+a. entity
+b. collection of primitives (list,set,map)
+
+ManyToOne
+a. JoinColumn fk
+b. JoinTable fk
+
+ManyToMany
+a. Join Table
+
+Splitting Entity into separate tables
+a. SecondaryTable
+@SecondaryTables
+@SecondaryTable
+
+
+JoinColumn:
+E
+	@JoinColumn(name = "entityF_fk", unique = true)
+F
+	@OneToOne(mappedBy = "entityF")
+
+JoinTable:
+X
+	@JoinTable(name = "OneToOne_JoinTable_XY", joinColumns = @JoinColumn(name = "x_fk"), inverseJoinColumns = @JoinColumn(name = "y_fk"))
+Y
+	@OneToOne(mappedBy = "entityY")
+
+
+Permutations:
+a. bidirectional
+b. unidirectional
+c. aggregate
+
+Bidirectional:
+A
+	@OneToOne
+B
+	@OneToOne(mappedBy = "entityB")
+
+Unidirectional:
+OneUni
+	@OneToMany
+	@JoinColumn(name = "ONE_ID", referencedColumnName = "ID")
+
+Aggregate:
+OneAggregate
+	@OneToMany
+	@JoinColumn(name = "one_fk")
+ManyAggregate
+	@ManyToOne
+	@JoinColumn(name = "one_fk", insertable = false, updatable = false)
+
+
+
+
+PrimaryKey
+a. simple
+@Id
+@SequenceGenerator - oracle sequence in class level
+@GeneratedValue - sequence in field level (auto, table, identity, sequence)
+b. composite key
+IdClass
+@IdClass - composite key object
+@Id - per field mapping in entity
+Embedded
+@EmbeddableId - composite key object (needs equals, hashcode impl)
+@EmbeddedId - pk object in entity
+
+
+
+
+
+
+Inheritance
+a. SINGLE_TABLE		one table, fields cannot be constrained as not null
+b. JOINED		table per subclass, too many joins will affect performance
+c. TABLE_PER_CLASS	jpa provider optional, not recommended
+
+Inheritance by superclass
+a. mapped super class
+@MappedSuperClass
+
+Inheritance by Composition
+a. embeddable, embedded
+	@Embeddable
+	@Embedded
+	@AttributeOverrides
+	@AttributeOverride
+
+How to implement Lazy Loading?
+	By default one to one and many to one is eager loaded.
+	Others like onetomany is lazy loaded
+	Use fetchType = LAZY (or EAGER) to override
+Ways to optimise performance?
+	join fetch to load associated tables
+	paginate results
+	2nd level cache
+	remove unnecessary tables in joins
+	db index, explain plan to check for full table scans
+How to implement Cascade?
+	use for associated tables for DMPRR (delete merge persist refresh remove)
+How to implement pagination?
+	setFirstResult()
+	setMaxResults()
+Locking
+	Optimistic - use version field, @Version annotation, and increment when updating. when version increased by more than one, will throw exception when committing
+	Pessimistic - lock record or table, and throw exception when retrieving	
+Caching
+1st and 2nd level cache
+	1st level cache is data cached by session.
+	2nd level cache is data cached across session for application wide use.
+	2nd level cache implemented by ehcache
+	Classes annonated with Cache
+Orphan
+	when element removed from list, auto deleted from database @OneToMany(orphanRemoval=true)
+	when entity from database, object not removed from list, will resave
+Validation
+	@NotNull
+	@Size
+Transaction Attributes
+	see Spring Txn Mgr	
+Isolation Levels
+	see Spring Txn Mgr
+	
+em.get()
+em.load() - will throw exception if not present
+em.find()
+em.save()	
+	
+
+
+JPQL
+Player part of Team	@ManyToMany
+Team part of League	@ManyToOne	
+
+Query
+	String jpql = "SELECT p FROM Player p WHERE UPPER(p.playerName) LIKE :name";
+	List<Player> playerList = em.createQuery(jpql, Player.class)
+	.setParameter("name", "PLAYER%").getResultList();
+NamedQuery
+	List<Player> playerList = em.createNamedQuery("getPlayersNamedLike", Player.class)
+	.setParameter("name", "PLAYER%").getResultList();
+Positional Parameters
+	String jpql = "SELECT p FROM Player p WHERE UPPER(p.playerName) LIKE ?1";
+	List<Player> playerList = em.createQuery(jpql, Player.class)
+	.setParameter(1, "PLAYER%").getResultList();
+
+Inner Join
+a. SELECT p FROM Player p, IN (p.teams) t
+b. SELECT p FROM Player p WHERE p.teams IS NOT EMPTY
+c. SELECT p FROM Player p JOIN p.teams t
+Navigate Set
+	Get all players under league
+	SELECT p FROM Player p, IN (p.teams) t WHERE t.league=:league
+	should not navigate via a list
+Left Join
+	Get all players with or without teams
+	SELECT p FROM Player p LEFT JOIN p.teamList t
+	or
+	SELECT p FROM Player p LEFT FETCH JOIN p.teamList t
+	to get both tables at once
+SUBQUERIES
+	EXISTS
+	NOT EXISTS
+	ANY
+	ALL
+	IN
+GROUP BY
+	GROUP BY
+	HAVING
+	
+	
+
+Criteria API
+	EntityManager em = JPAUtil.getEm();
+	CriteriaBuilder cb = em.getCriteriaBuilder();
+	CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+	Root<Player> player = cq.from(Player.class);
+	cq.select(player);
+	cq.where(cb.like(cb.upper(player.get(Player_.playerName)), "PLAYER%"));
+	List<Player> playerList = em.createQuery(cq).getResultList();

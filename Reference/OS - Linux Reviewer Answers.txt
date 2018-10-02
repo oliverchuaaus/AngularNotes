@@ -1,0 +1,17 @@
+how do you monitor resources ala task manager in windows
+ps -ef|grep tomcat
+
+how do you check for disk space?
+du
+
+examine file contents
+cat filename
+
+get last lines of log file
+tail -f 1000 filename
+
+different kind of shells
+bash, sh
+
+what to do to run restricted commands
+sudo su

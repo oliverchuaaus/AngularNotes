@@ -1,0 +1,9 @@
+JUnit Principles:
+a. Should be automated and repeatable
+b. Tests should be independent of each other
+
+What's new in JUnit4?
+http://www.ibiblio.org/java/slides/sdbestpractices2005/junit4/index.html
+
+JUNit 4 in 60 seconds
+http://www.cavdar.net/2008/07/21/junit-4-in-60-seconds/

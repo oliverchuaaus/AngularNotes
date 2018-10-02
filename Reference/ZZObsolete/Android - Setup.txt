@@ -1,0 +1,14 @@
+1. prerequisite: existing eclipse
+2. install android SDK
+http://developer.android.com/sdk/installing/index.html
+3. install ADT
+http://developer.android.com/tools/sdk/eclipse-adt.html
+4. install Kies for the USB driver
+5. tutorial
+http://developer.android.com/training/basics/firstapp/index.html
+
+
+
+Troubleshooting:
+1. findViewById() returning null
+setContentView needs to be called first

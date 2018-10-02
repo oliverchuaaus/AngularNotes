@@ -1,0 +1,11 @@
+how do you monitor resources ala task manager in windows
+
+how do you check for disk space?
+
+examine file contents
+
+get last lines of log file
+
+different kind of shells
+
+what to do to run restricted commands

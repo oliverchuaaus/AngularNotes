@@ -1,0 +1,18 @@
+Dos Equivalent:
+dir/w: ls -al
+copy: cp
+move: mv
+md: mkdir
+
+task manager: ps -ef|grep tomcat
+disk usage: df 
+notepad: vi
+
+Managing Group Access:
+http://www.yolinux.com/TUTORIALS/LinuxTutorialManagingGroups.html
+
+Vi Cheat Sheet:
+http://www.lagmonster.org/docs/vi.html
+
+Unix Shell Scripting Tutorial
+https://supportweb.cs.bham.ac.uk/docs/tutorials/docsystem/build/tutorials/unixscripting/unixscripting.html

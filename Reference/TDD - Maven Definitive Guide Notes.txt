@@ -1,0 +1,340 @@
+Maven:
+1. To see effective-pom (resulting pom combined with the default pom settings) for troubleshooting
+mvn help:effective-pom
+
+2. Goal vs lifecycle phase
+goal is pluginId:goalId1
+lifecycle phase is compile, install, etc.
+goals is for calling a functionality directly.
+lifecycle phase can call goals as part of it.
+
+3. lifecyclye phase "package" calls following phases which calls corresponding goals:
+process-resources	resources:resources
+compile			compiler:compile
+process-classes
+process-test-resources	resources:testResources
+test-compile		compiler:testCompile
+test			surefire:test
+prepare-package
+package			jar:jar (jar), site:attach-descriptor(pom)
+install			install:install
+deploy			deploy:deploy
+
+4. Maven Coordinate - unique id of a dependency.
+3 unique fields:
+	groupId
+	artificatId
+	version
+1 non-unique field
+	packaging
+
+5. Repository
+default repository: http://repo1.maven.org/maven2
+
+7. To see if there are dependency errors, mvn dependency:analyze
+If there are errors, see dependency tree, mvn dependency:tree
+You'll see all imported maven libraries and transitive dependencies.
+Same can be seen in M2Eclipse pom viewer Dependency Hierarchy tab.
+
+8. assembly:assembly goal and package lifecycle phase
+
+9.
+
+			
+10.
+Skip test failure
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+		<configuration>
+			<skip>true</skip>
+		</configuration>
+</plugin>
+OR
+use maven.test.skip
+e.g. mvn install -Dmaven.test.skip=true
+
+Ignore test failure
+testFailureIgnore - even when there are failing tests, build is successful
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+		<configuration>
+			<testFailureIgnore>true</testFailureIgnore>
+		</configuration>
+</plugin>
+
+11. Multi-module projects
+Parent has:
+<groupId>org.sonatype.mavenbook.ch06</groupId>
+<artifactId>simple-parent</artifactId>
+<packaging>pom</packaging>
+<version>1.0</version>
+<modules>
+	<module>simple-weather</module>
+	<module>simple-webapp</module>
+</modules>
+
+Modules has:
+<parent>
+	<groupId>org.sonatype.mavenbook.ch06</groupId>
+	<artifactId>simple-parent</artifactId>
+	<version>1.0</version>
+</parent>
+
+Parent is required to be of type pom
+Effect is module inherits from parent's build configuration and dependencies.
+
+When lifecycle phase is called on parent,
+and there are module1 and module2
+execution order is:
+module1 compile
+module1 test
+module2 compile
+module2 test
+
+12. In an enterprise project, it is a good idea to create an interface project: project with interfaces only.
+
+13. To assist in understanding the relationship of poms with one another,
+draw modules as boxes then specify whether the relationship is a dependency, inheritance or module.
+Note that a module may or may not inherit from a parent.
+
+14. Optimizing Dependencies
+a. dependencies duplicated across poms
+b. same version shared duplicated across dependencies
+c. parent and module version duplicated across poms
+d. unneeded transitive dependencies
+
+Solution
+a.
+<dependencies>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.6</version>
+	</dependency>
+</dependencies>	
+TO
+<dependencies>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+	</dependency>
+</dependencies>	
+<dependencyManagement>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.6</version>
+	</dependency>
+</dependencies>
+
+module pom should have dependencies' version tag removed if they are already in parent pom,
+because otherwise, they would override the parent pom entries.
+
+b.
+<properties>
+	<hibernate.annotations.version>3.3.0.ga</hibernate.annotations.version>
+</properties>
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-annotations</artifactId>
+	<version>${hibernate.annotations.version}</version>
+</dependency>
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-commons-annotations</artifactId>
+	<version>${hibernate.annotations.version}</version>
+</dependency>
+
+c.
+<dependency>
+	<groupId>${project.groupId}</groupId>
+	<artifactId>simple-weather</artifactId>
+	<version>${project.version}</version>
+</dependency>
+
+Note: You can't use these in parent tags or pom groupId/version tags.
+In fact, if pom has a parent, groupId/version tags are not required
+
+d.
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate</artifactId>
+	<version>3.2.5.ga</version>
+	<exclusions>
+		<exclusion>
+		<groupId>javax.transaction</groupId>
+		<artifactId>jta</artifactId>
+		</exclusion>
+	</exclusions>
+</dependency>
+
+15. Optimizing Plugins
+a. plugin versions duplicated across poms
+
+Solution:
+<properties>
+	<assembly.version>2.2-beta-2</assembly.version>
+</properties>
+<pluginManagement>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-assembly-plugin</artifactId>
+			<version>%{assembly.version}</version>
+		</plugin>	
+	</plugins>
+</pluginManagement>
+
+16. Optimizing Dependency Plugins
+mvn:analyze and see under 
+a. Used Undeclared Dependencies: These must be added explicitly.
+They may not cause problem because it is transitive dependency 
+but if things change, there might be problems.
+
+b. Unused Declared Dependencies: These may or may not be removed.
+Dependencies only used during runtime will show up here,
+as well as unused dependencies, so be careful not to remove dependencies
+otherwise you might have runtime errors.
+
+
+17. POM four categories:
+a. general project info - project name, developers, license
+b. build settings - add plugins, customize source, test, target paths, reporting
+c. build environment - profiles
+d. pom relationships - coordinate, parent, modules, dependencies
+
+18. Project versions
+<major version>.<minor version>.<incremental version>-<qualifier>
+qualifier: alpha, beta releases
+e.g. 1.3.2-beta-01
+qualifier should be zero-padded for sorting to work, due to a known maven bug
+
+SNAPSHOT versions
+1.0-SNAPSHOT when deployed to a repository becomes
+1.0-20080207-230803-1 deployed at 11:08 PM on February 7th, 2008 UTC
+
+LATEST, RELEASE versions
+LATEST - latest release or snapshot version
+RELEASE - latest release version
+
+19. Property references
+Implicit variables:
+env
+project
+settings
+
+Java System Properties
+Arbitrary properties
+e.g.
+<properties>
+<foo>bar</foo>
+</properties>
+...
+<someSetting>${foo}</someSetting>
+
+20. Dependencies
+Five dependency scope:
+	test - execution and compile, not required for package. e.g. JUnit
+	provided - execution and compile, not required for package. e.g. Servlet API
+	compile - default, required for compilation and package
+	runtime - execution only, not required for compilation, required in package e.g. JDBC API - compile, JDBC implementation - runtime
+	system - like provided, but for native objects
+
+Esoteric dependencies:
+optional dependencies - workaround is to have a separate project
+dependency version ranges - (,) exclusive [,] inclusive e.g. [3.8,4.0) is 3.8 <= n < 4.0
+scope affects transitive dependencies - all else remain the same, but for provided, it becomes provided.
+excluding transitive dependencies - needed when conflicting versions exist
+classifier - when different versions needed per artifact
+
+21. POM Best practices
+a. When you have a group of dependencies, package as pom with a list of dependencies
+and use pom as a dependency.
+b. Modules does not have to inherit from parent.
+
+Inheritance
+a. identifiers (at least one of groupId or artifactId must be overridden.)
+b. dependencies
+c. developers and contributors
+d. plugin lists
+e reports lists
+f plugin executions (executions with matching ids are merged)
+g plugin configuration
+
+Maven assumes that the parent POM is available from the local repository, 
+or available in the parentdirectory (../pom.xml) of the current project.
+If neither location is valid this default behavior may
+be overridden via the relativePath element.
+
+22. Build
+3 standard lifecycle:
+a. clean
+b. default or build
+c. site
+
+Clean
+pre-clean
+clean
+post-clean
+
+Default
+validate 		Validate the project is correct and all necessary information is available to complete a build
+generate-sources 	Generate any source code for inclusion in compilation
+process-sources 	Process the source code, for example to filter any values
+generate-resources 	Generate resources for inclusion in the package
+process-resources 	Copy and process the resources into the destination directory, ready for packaging
+compile 		Compile the source code of the project
+process-classes 	Post-process the generated files from compilation, for example to do bytecode enhancement on Java classes
+generate-test-sources 	Generate any test source code for inclusion in compilation
+process-test-sources 	Process the test source code, for example to filter any values
+generate-test-resources Create resources for testing
+process-test-resources 	Copy and process the resources into the test destination directory
+test-compile 		Compile the test source code into the test destination directory
+test 			Run tests using a suitable unit testing framework. These tests should not require the code be packaged or deployed
+prepare-package 	Perform any operations necessary to prepare a package before the actual packaging. 
+			This often results in an unpacked, processed version of the package (coming in Maven 2.1+) 
+			package Take the compiled code and package it in its distributable format, such as a JAR, WAR, or EAR
+pre-integration-test 	Perform actions required before integration tests are executed. 
+			This may involve things such as setting up the required environment
+integration-test 	Process and deploy the package if necessary into an environment where integration tests can be run
+post-integration-test 	Perform actions required after integration tests have been executed. This may include cleaning up the environment
+verify 			Run any checks to verify the package is valid and meets quality criteria
+install 		Install the package into the local repository, for use as a dependency in other projects locally
+deploy 			Copies the final package to the remote repository for sharing with other developers and projects 
+			(usually only relevant during a formal release)
+Site
+pre-site			
+site
+post-site
+site-deploy
+
+33. Process Resources
+Filtering to resources
+
+RESOURCE:
+<service>
+<!-- This URL was set by project version ${project.version} -->
+<url>${jdbc.url}</url>
+<user>${jdbc.username}</user>
+<password>${jdbc.password}</password>
+</service>
+
+PROPERTY:
+jdbc.url=somethingUrl
+jdbc.username=somethingUsername
+jdbc.password=somethingPassword
+
+POM:
+<resources>
+	<resource>
+		<filtering>true</filtering>
+		<directory>${basedir}/src/main/command</directory>
+		<includes>
+			<include>run.bat</include>
+			<include>run.sh</include>
+		</includes>
+		<targetPath>${basedir}</targetPath>
+	</resource>
+</resources>

@@ -1,0 +1,61 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<body>
+	<div ng-app="myApp" ng-controller="myCtrl">
+	<ol>
+		<li>Call service: {{myService}}
+		<li>Call factory: {{myFactory}}
+		<li>Call provider: {{myProvider}}
+		<li>Call provider: {{myProvider2}}
+	</div>
+
+</body>
+
+<script>
+	var app = angular.module("myApp", []);
+	app.controller("myCtrl", function($scope, numberService, numberFactory, numberProvider) {
+		//a
+		$scope.myService = numberService.bin(15);
+		$scope.myFactory = numberFactory.bin(15);
+		$scope.myProvider = numberProvider.bin(15);
+	});
+
+	app.service("numberService", function() {
+		this.hex = function(num) {
+			return num.toString(16);
+		}
+		this.bin = function(num) {
+			return num.toString(2);
+		}
+	});
+
+	app.factory("numberFactory", function() {
+		var factory = {};
+		factory.hex = function(num) {
+			return num.toString(16);
+		}
+		factory.bin = function(num) {
+			return num.toString(2);
+		}
+		return factory;
+	});
+
+	app.provider("numberProvider", function() {
+		this.$get = function(){
+			var factory = {};
+			factory.hex = function(num) {
+				return num.toString(16);
+			}
+			factory.bin = function(num) {
+				return num.toString(2);
+			}
+			return factory;
+		};
+	});
+
+
+</script>
+
+</html>

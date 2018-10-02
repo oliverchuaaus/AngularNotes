@@ -1,0 +1,31 @@
+Issues:
+Session Fixation -  attacker send victim link with sessionid of attacker, after victim logs in, attacker can see all of victim's data.
+- spring invalidates old session
+CSRF/XSRF - Cross Site Request Forgery - attacker sends requests via another window that forges requests by an active session of victim while they're logged in.
+- need to add csrf token and pass in as param in request for post/put/delete
+HTTPS - encrypts communications between server
+Phishing - no server way to prevent
+2 step authentication via sms or email
+One way hashing of passwords in database, instead of using plain text.
+
+@Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableWebSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+	//AuthenticationManagerBuilder builds AuthenticationManager using implementation of UserDetailsService
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService);
+	}
+	protected void configure(HttpSecurity http) throws Exception {
+		...
+	}
+}
+
+@Service
+public class FakeUserDetailsService implements UserDetailsService {
+	//UserDetailsService implementation overrides loadUserByUsername, returns matching UserDetails object containing username, password and roles.	
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		...
+		return new User(username, "password", getGrantedAuthorities(username));
+	}
+}

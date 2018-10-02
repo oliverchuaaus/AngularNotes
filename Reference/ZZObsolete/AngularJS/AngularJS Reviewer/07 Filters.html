@@ -1,0 +1,20 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+
+<div ng-app="myApp" ng-controller="myCtrl">Salary: {{salary |
+	currency}}
+	
+Date: {{ birthday | date:'dd/MM/yyyy'}}	
+	</div>
+
+<script>
+	var app = angular.module("myApp", []);
+	app.controller("myCtrl", function($scope) {
+		$scope.salary = 122131;
+		$scope.birthday = new Date();
+	});
+</script>
+
+</html>

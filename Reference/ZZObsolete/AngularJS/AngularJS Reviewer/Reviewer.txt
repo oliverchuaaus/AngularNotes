@@ -1,0 +1,55 @@
+01 Expressions
+a. Create person object
+Print person fields
+Use span to print fields
+b. Create number array
+Iterate and print array
+c. Create textfield
+and print textfield value dynamically
+
+02 Modules
+a. Create person object.
+Print person fields.
+Initialise using modules.
+
+03 Directives
+a. Create 4 directive types
+
+04 Model
+a. Create email input field.
+Show error if invalid.
+Show pink background if invalid.
+
+05 Controller
+a. Create function in controller returning 
+concat of first and last name
+b. create function as an external js
+
+06 Scope
+a. Define same variable in rootScope and scope
+and show values
+
+07 Filter
+a. Format currency
+b. Format date with date format
+
+08 Services
+a. Display absolute url
+b. Display text after timeout
+c. Display current time
+d. Display html contents
+e. Call custom service
+f. Call custom filter
+
+09 Http
+a. Display html contents and status code, use method
+
+10 Tables
+a. Display json from http://www.w3schools.com/angular/customers.php in table 
+
+11 Select
+a. create select for string array(ng-repeat and other) 
+b. create select for object array (select object, select key)
+c. create select for object with multiple fields
+
+

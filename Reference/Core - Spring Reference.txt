@@ -1,0 +1,606 @@
+Spring in Action 3rd edition
+
+
+CHAPTER 1 
+
+Spring features:
+a. POJOs - don't need to extend abstract classes
+b. Dependency Injection - don't need to instantiate subclass via hardcoding
+c. Aspect
+d. Templates - don't need to repeat yourself
+
+
+Spring uses Reflection to load class, so default constructor must be available
+
+ApplicationContext ctx = new FileSystemXmlApplicationContext("spring-context.xml");
+MyInf inf = ctx.getBean("MyImpl");
+
+99.9% of the time there is only 1 implementation per interface, so use this to get bean:
+clazz.cast(context.getBean(clazz));
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="myImpl" class="MyImpl" />
+</beans>"
+
+
+
+CHAPTER 2 WIRING BEANS
+
+DECLARING BEANS
+a. simple bean
+<bean id="duke" class="com.springinaction.springidol.Juggler"/>
+
+b. constructor argument
+literal and object reference  
+<bean id="poeticDuke" class="com.springinaction.springidol.PoeticJuggler">
+	<constructor-arg value="15" />
+	<constructor-arg ref="sonnet29" />
+</bean>
+<bean id="sonnet29" class="com.springinaction.springidol.Sonnet29" />
+
+if class has no constructor
+<bean id="theStage" class="com.springinaction.springidol.Stage"
+factory-method="getInstance" />
+
+c. bean scope
+Singleton scope default. Declare prototype otherwise.
+<bean id="ticket" class="com.springinaction.springidol.Ticket" scope="prototype" />
+
+
+
+INJECTING PROPERTIES
+a. Simple values
+<bean id="kenny" class="com.springinaction.springidol.Instrumentalist">
+	<property name="song" value="Jingle Bells" />
+</bean>
+
+b. Other beans
+<bean id="kenny2" class="com.springinaction.springidol.Instrumentalist">
+	<property name="song" value="Jingle Bells" />
+	<property name="instrument" ref="saxophone" />
+</bean>
+<bean id="saxophone" class="com.springinaction.springidol.Saxophone" />
+
+Inner Bean - own instance
+<bean id="kenny" class="com.springinaction.springidol.Instrumentalist">
+	<property name="song" value="Jingle Bells" />
+	<property name="instrument">
+		<bean class="org.springinaction.springidol.Saxophone" />
+	</property>
+</bean>
+
+c. Collections
+list	dupes allowed
+set	no dupes
+map 	<String,Object>
+props	<String,String>
+
+list/set
+<bean id="hank" class="com.springinaction.springidol.OneManBand">
+	<property name="instruments">
+		<list>
+			<ref bean="guitar" />
+			<ref bean="cymbal" />
+			<ref bean="harmonica" />
+		</list>
+	</property>
+</bean>
+
+map
+<bean id="hank" class="com.springinaction.springidol.OneManBand">
+	<property name="instruments">
+		<map>
+			<entry key="GUITAR" value-ref="guitar" />
+			<entry key="CYMBAL" value-ref="cymbal" />
+			<entry key="HARMONICA" value-ref="harmonica" />
+		</map>
+	</property>
+</bean>
+
+props
+<bean id="hank" class="com.springinaction.springidol.OneManBand">
+	<property name="instruments">
+		<props>
+			<prop key="GUITAR">STRUM STRUM STRUM</prop>
+			<prop key="CYMBAL">CRASH CRASH CRASH</prop>
+			<prop key="HARMONICA">HUM HUM HUM</prop>
+		</props>
+	</property>
+</bean>
+
+
+
+
+SpEL Spring EL
+String Literal
+<property name="name" value="#{'Chuck'}"/>
+Ref
+<property name="instrument" value="#{saxophone}"/>
+<property name="song" value="#{kenny.song}" />
+Type
+<property name="multiplier" value="#{T(java.lang.Math).PI}"/>
+Expression
+<property name="randomNumber" value="#{T(java.lang.Math).random()}"/>
+Collection
+<util:list id="cities">
+	<bean class="com.habuma.spel.cities.City" p:name="Chicago" p:state="IL" p:population="2853114"/>
+	<bean class="com.habuma.spel.cities.City" p:name="Atlanta" p:state="GA" p:population="537958"/>
+</util:list>
+<property name="chosenCity" value="#{cities[2]}"/>
+Subset of Collection
+.?[] all matching
+.^[] first matching
+.$[] last matching
+<property name="bigCities" value="#{cities.?[population gt 100000]}"/>
+
+
+
+AUTOWIRING
+4 kinds of autowiring
+a. byName
+b. byType
+c. constructor
+d. autodetect	constructor first, then byType
+
+FROM
+<bean id="kenny2" class="com.springinaction.springidol.Instrumentalist">
+	<property name="song" value="Jingle Bells" />
+	<property name="instrument" ref="saxophone" />
+</bean>
+TO:
+<bean id="kenny" class="com.springinaction.springidol.Instrumentalist" autowire="byName">
+	<property name="song" value="Jingle Bells" />
+</bean>
+<bean id="instrument" class="com.springinaction.springidol.Saxophone" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHAPTER 3 WIRING WITH ANNOTATIONS
+
+<context:annotation-config />	intention to use annotations-based wiring
+<context:component-scan>	same as above, but auto-scans beans
+
+<!-- specify base package -->
+<context:component-scan base-package="com.springinaction.springidol" />
+
+Autowiring annotations
+a. @Autowired
+b. @Inject
+c. @Resource
+
+@AUTOWIRED
+Set field as optional: 
+@Autowired(required=false)
+private Instrument instrument;
+If constructor, only one can be required=true
+
+Set one if multiple:
+@Autowired
+@Qualifier("guitar")
+private Instrument instrument;
+
+qualifier can be id or qualifier tag in xml
+or value of the annotation of referenced bean
+or custom annotation (it can be multiple)
+
+
+
+@INJECT
+@Inject 
+public KnifeJuggler(Provider<Knife> knifeProvider) {
+	knives = new HashSet<Knife>();
+	for (int i = 0; i < 5; i++) {
+		knives.add(knifeProvider.get());
+	}
+}
+Provider is a container of the objects so lazy loading is possible.
+
+
+Set field as optional: 
+N.A.
+Set one if multiple:
+@Inject
+@Named("guitar")
+private Instrument instrument;
+
+qualifier is the id
+or custom annotation (it can be multiple)
+
+
+@Value("#{systemProperties.myFavoriteSong}")
+private String song;
+
+
+
+AUTO DISCOVERY
+Bean Annotations
+@Component	General Purpose Bean
+@Controller	MVC Controller
+@Service	Service Class
+@Repository	Data Repository
+
+@Component("eddie")
+public class Instrumentalist implements Performer {}
+
+Auto discovery can be filtered to include or exclude classes
+
+
+JAVA BASED CONFIG
+@Configuration
+public class SpringIdolConfig {
+  //<start id="duke_bean" /> 
+  @Bean
+  public Performer duke() {
+    return new Juggler();
+  }
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHAPTER 4 AOP
+Concepts:
+Aspect 		Class containing secondary functionality code, merger of advice and pointcuts
+Advice		Aspect's functionality, defines what and when
+Join Point	Entry point: method, exception thrown, field modified	
+Point Cut	defines where. class and method names, patterns resolving to class and method names
+
+Introduction	allows adding new attributes or methods to existing classes
+Weaving		apply aspect to a target object to create a new proxied object
+
+5 kinds of advice
+a. Before
+b. After
+c. Around
+d. After-returning
+e. After-throwing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHAPTER 5 DATABASE
+
+Spring Exceptions are unchecked and more precise than SQLException
+They are platform agnostic
+
+
+Templates and Support Superclass
+a. JdbcTemplate		JdbcDaoSupport.getJdbcTemplate()
+b. HibernateTemplate	HibernateDaoSupport.getHibernateTemplate()
+c. JpaTemplate		JpaDaoSupport.getJpaTemplate()
+
+
+
+CONFIGURE DATA SOURCE
+3 ways:
+a. JNDI data source			ideal
+b. pooled data source
+c. jdbc driver-based data source	not recommended for prod, for testing only
+
+
+JDBC
+2 types of JdbcTemplates
+a. JdbcTemplate			indexed params
+b. NamedParameterJdbcTemplate	named params
+
+<bean id="spitterDao" class="com.habuma.spitter.persistence.JdbcSpitterDao">
+	<property name="jdbcTemplate" ref="jdbcTemplate" />
+</bean>
+<bean id="jdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+     	<constructor-arg ref="dataSource" />
+</bean>
+JdbcSpitterDao extends SimpleJdbcDaoSupport implements SpitterDao
+
+OR SIMPLIFY TO
+
+<bean id="spitterDao" class="com.habuma.spitter.persistence.JdbcSpitterDao">
+	<property name="dataSource" ref="dataSource" />
+</bean>
+jdbcTemplate will be auto-created
+
+
+
+HIBERNATE
+HibernateTemplate was historically used, but is no longer the recommended way; contextual session is.
+In Hibernate, Session is returned by SessionFactory
+
+2 choices for SessionFactory:
+a. hibernate xml mapping	LocalSessionFactoryBean:
+b. hibernate annotations	AnnotationSessionFactoryBean
+
+in spring xml, specify:
+a. datasource
+b. hibernate properties
+c. list of hibernate xml mapping files OR
+package to scan for annotations
+
+@Repository used to mark DAO class
+
+Declare PersistenceExceptionTranslationPostProcessor in spring xml to translate hibernate exception to spring exception
+
+Hibernate Annotations
+<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+	<property name="dataSource" ref="dataSource" />
+	<property name="packagesToScan" value="com.habuma.spitter.domain" />
+	<property name="hibernateProperties">
+	<props>
+		<prop key="dialect">org.hibernate.dialect.HSQLDialect</prop>
+	</props>
+	</property>
+</bean>
+
+
+JPA
+2 kinds of entity managers:
+a. application-managed		LocalEntityManagerFactoryBean		EntityManagerFactory emf = PersistenceProvider.createEntityManagerFactory();
+b. container-managed		LocalContainerEntityManagerFactoryBean	EntityManagerFactory emf = PersistenceProvider.createContainerEntityManagerFactory();
+
+application-managed
+<bean id="emf" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+	<property name="persistenceUnitName" value="spitterPU" />
+</bean>
+
+container-managed
+<bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	<property name="dataSource" ref="dataSource" />
+	<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+</bean>
+<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+	<property name="database" value="HSQL" />
+	<property name="showSql" value="true"/>
+	<property name="generateDdl" value="false"/>
+	<property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect" />
+</bean>
+CM is preferable as more settings configurable via Spring.
+
+@PersistenceContext
+private EntityManager em;
+
+
+
+
+
+
+
+
+
+
+
+CHAPTER 6 TRANSACTION MANAGEMENT
+ACID transactions:
+Atomic		all or none
+Consistent	never corrupted after transaction ends
+Isolated	sessions isolated from each other
+Durable		survive system crash
+
+
+TransactionManagers
+JDBC		DataSourceTransactionManager
+Hibernate	HibernateTransactionManager
+JPA		JpaTransactionManager
+JTA		JtaTransactionManager
+
+JDBC
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"/>
+</bean>
+
+Hibernate
+<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+JPA
+<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+	<property name="entityManagerFactory" ref="entityManagerFactory" />
+</bean>
+
+JTA
+<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+	<property name="transactionManagerName" value="java:/TransactionManager" />
+</bean>
+
+
+Programmatic vs Declarative Transactions
+
+Programmatic:
+public void saveSpittle(final Spittle spittle) {
+	txTemplate.execute(new TransactionCallback<Void>() {
+		public Void doInTransaction(TransactionStatus txStatus) {
+			try {
+				spitterDao.saveSpittle(spittle);
+			} catch (RuntimeException e) {
+				txStatus.setRollbackOnly();
+				throw e;
+			}
+			return null;
+			}
+	});
+}
+Note: txTemplate is injected via xml
+
+
+Declarative:
+5 Transaction Attributes
+a. Propagation
+b. Isolation Levels
+c. Read-only		
+d. Transation Timeout	Applicable for Propagation Attrobutes that creat enew
+e. Rollback Rules	Default is rollback on runtime exceptions only. Specify exception exemptions here
+
+
+7 Propagation Attributes	EXISTING		NO EXISTING
+a. PROPAGATION_MANDATORY	use			throw
+b. PROPAGATION_NESTED		suspend, create		create
+c. PROPAGATION_NEVER		throw			nothing
+d. PROPAGATION_NOT_SUPPORTED	suspend			nothing
+e. PROPAGATION_REQUIRED 	use			create		DEFAULT
+f. PROPAGATION_REQUIRES_NEW	create			create
+g. PROPAGATION_SUPPORTS		use			nothing
+
+
+3 Isolation Issues
+a. Dirty Reads		txnA can read txnB's uncommitted changes
+b. Nonrepeatable Reads	txnA query resultA is different to resultB, due to txnB updating the record
+c. Phantom Reads	txnA query resultA is different to resultB, due to txnB adding one or more records
+
+5 Isolation Levels
+a. ISOLATION_DEFAULT		Default
+b. ISOLATION_READ_UNCOMMITTED	all three issues possible
+c. ISOLATION_READ_COMMITTED	Dirty Reads prevented
+d. ISOLATION_REPEATABLE_READ	Dirty Reads, Nonrepeatable Reads prevented
+e. ISOLATION_SERIALIZABLE	All three issues prevented
+
+
+
+Declaring Transactions
+XML
+<tx:advice id="txAdvice">
+	<tx:attributes>
+		<tx:method name="add*" propagation="REQUIRED" />
+		<tx:method name="*" propagation="SUPPORTS" read-only="true"/>
+	</tx:attributes>
+</tx:advice>
+
+Annotations
+in xml
+<tx:annotation-driven/>
+OR if transactionManager bean id is not used:
+<tx:annotation-driven transaction-manager="txManager" />
+
+in code
+@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+public void addSpitter(Spitter spitter) {}
+
+@Transactional(propagation=Propagation.SUPPORTS, readOnly=true)
+public class SpitterServiceImpl implements SpitterService {}
+
+
+
+
+Sample context for transaction management for jpa hibernate oracle
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:component-scan base-package="com.tougher.prattle" />
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:XE" />
+		<property name="username" value="prattle" />
+		<property name="password" value="prattle" />
+	</bean>
+
+	<bean id="jpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="database" value="ORACLE" />
+		<property name="showSql" value="true" />
+		<property name="generateDdl" value="true" />
+		<property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" />
+	</bean>
+
+	<bean id="emf"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="emf" />
+	</bean>
+
+	<!-- for adhoc jdbc calls during testing -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+	<!-- Needed to translate JPA exceptions into Spring exceptions -->
+	<bean
+		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+	<!-- Needed to inject em into DAO -->
+	<bean
+		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
+
+	<tx:annotation-driven />
+
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Spring MVC

@@ -1,0 +1,55 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<body>
+	<div ng-app="myApp" ng-controller="myCtrl">
+
+		<p>a. create select for string array(ng-repeat and other)
+		<p>
+			String array: <select ng-model="stringArraySelect">
+				<option ng-repeat="x in stringArray">{{x}}
+			</select>
+		<p>You selected: {{stringArraySelect}}
+		<p>
+			String array: <select ng-model="stringArraySelect2"
+				ng-options="x for x in stringArray">
+			</select>
+		<p>You selected: {{stringArraySelect2}}
+		<p>b. create select for object array (select object, select key)
+		<p>
+			Object array: <select ng-model="objectArraySelect"
+				ng-options="object.name for object in objectArray"></select>
+		<p>You selected: {{objectArraySelect}}
+		<p>
+			Object array: <select ng-model="objectArraySelect2"
+				ng-options="object.value as object.name for object in objectArray"></select>
+		<p>You selected: {{objectArraySelect2}}
+		<p>c. create select for object with multiple fields
+		<p>
+			Object: <select ng-model="objectSelect"
+				ng-options="name as value for (name, value) in object1"></select>
+		<p>You selected: {{objectSelect}}
+	</div>
+</body>
+
+<script>
+	var app = angular.module("myApp", []);
+	app.controller("myCtrl", function($scope, $http) {
+		//a
+		$scope.stringArray = [ "option1", "option2", "option3" ];
+		$scope.objectArray = [ {
+			name : "Toyota",
+			value : "100"
+		}, {
+			name : "Mitsubishi",
+			value : "200"
+		} ];
+		$scope.object1 = {
+			name1 : "Goldilocks",
+			name2 : "Peter Pan"
+		};
+	});
+</script>
+
+</html>

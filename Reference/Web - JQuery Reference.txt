@@ -1,0 +1,376 @@
+http://www.w3schools.com/jQuery
+
+Download js and reference
+<head>
+<script src="jquery-1.11.1.min.js"></script>
+</head>
+
+Basic format
+$(selector).action()
+
+Need to make sure page is loaded before doing any js operations
+$(document).ready(function()){
+...
+
+});
+or this simpler form
+$(function(){
+...
+});
+
+
+
+$("selector").html("Add some text to html page")
+
+Selectors:
+a. element	ElementSelector
+b. id		#DivSelector	 
+c. class 	.ClassSelector
+
+Other Selectors:
+*			all
+p.intro			p with class=intro
+ul li:first		first li of first ul
+ul li:first-child	first li of all ul
+a[target!="_blank"]	all links with target != blank
+a[href^="https://"]	all links with href starting with https"//
+
+
+Mouse:
+click
+dblclick
+mouseenter
+mouseleave
+
+Keyboard:
+keypressed
+keydown
+keyup
+
+Form:
+submit
+change
+focus
+blur
+
+Event Samples:
+//Hide p when clicked.
+$("p").click(function(){
+  $(this).hide();
+});
+
+//Highlight field when selected
+$("input").focus(function(){
+  $(this).css("background-color","red");
+});
+$("input").blur(function(){
+  $(this).css("background-color","white");
+});
+
+
+
+
+
+
+
+
+EFFECTS:
+a. hide, show, toggle
+$(selector).hide(speed, callback);
+b. fade
+fadeIn, fadeOut, fadeToggle, fadeTo
+fadeTo(speed, opacity, callback)
+c. slide
+slideUp, slideDown, slideToggle
+d. animate
+e. stop
+
+Callback:
+$(selector).hide(speed, function(){
+  alert('done')
+});
+
+Chaining:
+$("#p1").slideUp(2000).slideDown(2000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HTML:
+Get:
+<p id="test">Hello <b>World</b></p>
+$("#test").text() - Hello World
+$("#test").html() - Hello <b>World</b>
+
+Name<input id="test">
+$("#test").value() - Name field
+
+<a href="next.html">link</a> 
+$("#test").attr("href") - next.html
+
+
+
+Set:
+$("#test").text("Hello World");
+
+Callback version:
+//params are index and origText
+$("#test1").text(function(i,origText){
+return "Old text: " + origText + " New text: Hello world! (index: " + i + ")"; 
+});
+});
+
+
+$("button").click(function(){
+$("#w3s").attr({
+"href" : "http://www.w3schools.com/jquery",
+"title" : "W3Schools jQuery Tutorial"
+});
+});
+
+Add:
+$("p").append("Added at the end");
+$("p").prepend("Added at the beginning");
+$("img").before("Some text before img");
+$("img").after("Some text after img");
+
+appendTo(targets);
+prependTo(targets);
+insertBefore(targets);
+insertAfter(targets);
+
+
+Remove:
+$("#w3s").remove()		remove element
+$("#header").empty()		remove element and child elements
+$("#w3s").remove(".italic")	remove element and children with italic class
+
+
+CSS:
+
+sample css:
+.important
+{
+font-weight:bold;
+font-size:xx-large;
+}
+
+.blue
+{
+color:blue;
+}
+
+
+$("div").addClass("important");
+$("div").removeClass("important");
+$("div").toggleClass("important");
+
+$("p").css("background-color",yellow");
+$("p").css({"background-color":"yellow","font-size":"200%"});
+
+Dimensions:
+height
+innerHeight
+outerHeight
+outerHeight(true)
+
+width
+innerWidth
+outerWidth
+outerWidth(true)
+
+
+
+
+
+
+
+
+TRAVERSING:
+a. ancestors
+parent() parents() parentsUntil()
+b. descendants
+children() find(*)
+c. siblings
+siblings() 
+next() nextAll() nextUntil()
+prev() prevAll() prevUntil()
+d. filtering
+first()
+last()
+eq() 		compares index
+filter()	
+not()		opposite of filter	
+
+
+
+
+
+
+
+
+
+
+
+
+
+AJAX:
+Syntax:
+$(selector).load(URL,data,callback);
+url  - can include ids which will be included, the rest are excluded
+data - querystring key/value pairs
+callback
+
+function(responseTxt,statusTxt,xhr){
+  if(statusTxt=="success")
+    alert("External content loaded successfully!");
+  if(statusTxt=="error")
+    alert("Error: "+xhr.status+": "+xhr.statusText);
+}
+
+Get:
+$.get(url,callback)
+
+Post:
+$.post(URL,data,callback);
+
+$("button").click(function(){
+  $.post("demo_test_post.asp",
+  {
+    name:"Donald Duck",
+    city:"Duckburg"
+  },
+  function(data,status){
+    alert("Data: " + data + "\nStatus: " + status);
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jquery in Action
+Advanced Selectors:
+^ 	starts with
+$ 	ends with
+* 	matches any
+
+E F	Fs that are descendants of E
+E>F	Fs that are direct children of E
+E+F	Fs that are preceded directly by sibling E
+E~F	Fs that are preceded by sibling E
+
+pseudo classes:
+first
+last
+first-child
+last-child
+nth-child
+even
+odd
+eq
+gt
+lt
+
+nth-child starts with 1 for css compatability.
+$('input[type=checkbox][checked]')
+checkbox:checked - same using pseudo class
+
+
+
+Arrays:
+$($("a")[0])
+$($("a").get(0))
+better to use $("a").eq(0)
+
+chain selectors:
+$('img[alt],img[title]')
+$('img[alt]').add('img[title]')
+
+subarray:
+slice(begin, end)
+
+
+has
+map
+each
+end -  back to previous wrapped set
+andSelf - merge two previous wrapped sets
+
+$("div").has("img");
+
+var array = $("div").map(function(){
+  return (this.id==undefined?null:this.id);
+});
+
+$('img').each(function(n){
+this.alt='This is image['+n+'] with an id of '+this.id;
+});
+
+$("img").each(function(){
+this.alt="This is the file " +this.src;
+});
+
+
+
+
+CSS:
+addClass(names)
+removeClass(names)
+toggleClass(names)
+toggleClass(names,switch) switch=true to add, false to remove
+hasClass(name)
+
+css(name,value)
+css(properties)
+width(value), height(value)
+
+position and scrolling
+offset()
+position()
+
+
+
+
+FORMS:
+$('[name="radioGroup"]:checked').val()
+var checkboxValues = $('[name="checkboxGroup"]:checked').map(
+function(){ return $(this).val(); }
+).toArray();

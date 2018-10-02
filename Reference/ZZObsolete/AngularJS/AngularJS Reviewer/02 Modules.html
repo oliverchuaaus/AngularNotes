@@ -1,0 +1,25 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<body>
+
+	<div ng-app="myApp" ng-controller="myCtrl">
+		<P>
+			a. Create person object Print person fields Initialise using modules
+			<span ng-bind="person.firstName"></span> {{person.lastName}}
+	</div>
+</body>
+
+<script>
+	var app = angular.module("myApp", []);
+	app.controller("myCtrl", function($scope) {
+		$scope.person = {
+			firstName : 'Kris',
+			lastName : 'Chua'
+		};
+	});
+</script>
+
+
+</html>

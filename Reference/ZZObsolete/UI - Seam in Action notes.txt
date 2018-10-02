@@ -1,0 +1,177 @@
+1. Seam commands
+
+a. seam setup
+interview to fill up seam/seam-gen/build.properties
+copies jdbc.jar to jboss/server/default/lib
+
+b. seam create-project
+create eclipse project files
+
+c. seam generate
+rev eng existing database
+actually calls two separate steps:
+create-model
+    generate model classes
+create-ui
+    generate ui classes
+
+d. seam deploy or seam explode
+seam undeploy or seam unexplode
+
+e. seam generate restart
+specify generation tweaks in seam/seam-gen/resources/seam-gen.reveng.xml
+   
+2. Customize Reverse Engineering
+seam/seam-gen/resources/seam-gen.reveng.xml being ignored
+Solution:
+seam-gen.reveng.xml changes should be in project/resources.
+Also, the table tag attributes should match the annotation of the model.
+In H2's case: <table name="COURSE" schema="PUBLIC" catalog="H2">
+
+3. Setup
+SeamListener in web.xml
+<listener>
+  <listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
+</listener>
+
+FacesServlet in web.xml
+<servlet>
+  <servlet-name>Faces Servlet</servlet-name>
+  <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>Faces Servlet</servlet-name>
+  <url-pattern>*.seam</url-pattern>
+</servlet-mapping>
+
+FaceletsViewHandler in faces-config.xml
+<faces-config>
+<application>
+<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
+</application>
+</faces-config>
+
+Override default .jsp extension in faces-config.xml
+<context-param>
+<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+<param-value>.xhtml</param-value>
+</context-param>
+
+SeamResourceServlet in web.xml (Collateral resources)
+<servlet>
+  <servlet-name>Seam Resource Servlet</servlet-name>
+  <servlet-class>
+    org.jboss.seam.servlet.SeamResourceServlet 
+  </servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>Seam Resource Servlet</servlet-name>
+  <url-pattern>/seam/resource/*</url-pattern>
+</servlet-mapping>
+
+SeamFilter in web.xml (must be the first filter)
+<filter>
+  <filter-name>Seam Filter</filter-name>
+  <filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
+</filter>
+<filter-mapping>
+  <filter-name>Seam Filter</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping>
+
+4. Facelet concept: Tiles counterpart
+ORIGINAL
+<div class="prop">
+    <h:outputLabel for="name" styleClass="name">
+    Name: <span class="required">*</span>
+    </h:outputLabel>
+    <span class="value">
+        <h:inputText id="name" required="true"
+        value="#{courseHome.instance.name}">
+        <f:validateLength minimum="3" maximum="40"/>
+        </h:inputText>
+    </span>
+    <span class="error">
+        <h:message for="name" styleClass="errors"/>
+    </span>
+</div>
+
+TEMPLATE (layout/edit.xhtml)
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:s="http://jboss.com/products/seam/taglib">
+<div class="prop">
+    <s:label styleClass="name #{invalid ? 'errors' : ''}">
+        <ui:insert name="label"/>
+        <s:span styleClass="required" rendered="#{required}">*</s:span>
+    </s:label>
+    <span class="value #{invalid ? 'errors' : ''}">
+        <s:validateAll>
+        <ui:insert/>
+        </s:validateAll>
+    </span>
+    <span class="error">
+        <h:graphicImage value="/img/error.gif"
+        rendered="#{invalid}" styleClass="errors"/>
+        <s:message styleClass="errors"/>
+    </span>
+</div>
+</ui:composition>
+
+USAGE:
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:s="http://jboss.com/products/seam/taglib"
+xmlns:a="http://richfaces.org/a4j">
+...
+    <s:decorate id="nameField" template="layout/edit.xhtml">
+        <ui:define name="label">Name:</ui:define>
+        <h:inputText id="name" size="50" required="true" value="#{courseHome.instance.name}">
+            <a:support event="onblur" reRender="nameField" ajaxSingle="true" bypassUpdates="true"/>
+        </h:inputText>
+    </s:decorate>
+...
+</ui:composition>
+
+
+5. JSF Life cycle
+1. Restore View
+2. Apply Request Values
+3. Process Validations
+4. update Model Values
+5. Invoke Application
+6. Render Response
+
+6. Seam page navigation setting xml: pages.xml
+replaces the navigation-rules inside faces-config.xml
+JSF
+<navigation-rule>
+    <from-view-id>/FacilityEdit.xhtml</from-view-id>
+    <navigation-case>
+        <from-action>#{facilityHome.persist}</from-action>
+        <from-outcome>persisted</from-outcome>
+        <to-view-id>/Facility.xhtml</to-view-id>
+        <redirect/>
+    </navigation-case>
+</navigation-rule>
+
+SEAM
+<page view-id="/FacilityEdit.xhtml">
+    <navigation from-action="#{facilityHome.persist}">
+    <rule if-outcome="persisted"
+        if="#{facilityHome.enterCourse}">
+        <redirect view-id="/CourseEdit.xhtml"/>
+            <param name="courseFrom" value="Facility"/>
+            <message severity="INFO">
+            Enter course information for #{facilityHome.instance.name}.
+            </message>
+        </redirect>
+    </rule>
+    <rule if-outcome="persisted" if="#{!facilityHome.enterCourse}">
+        <redirect view-id="/Facility.xhtml"/>
+    </rule>
+    </navigation>
+</page>

@@ -1,0 +1,48 @@
+Error:
+ConcurrentModificationException when removing an item from the list while inside a foreach loop
+Cause:
+Cannot change the list elements while iterating through the list
+Fix:
+"Use Iterator.remove() instead of list.remove()
+Source: http://tech.puredanger.com/2009/02/02/java-concurrency-bugs-concurrentmodificationexception"
+
+Error:
+Strange regression error that starts in December 1	
+Cause:
+"expiry.roll(Calendar.MONTH, true);
+Fix:
+Will work until it fails starting 1st of December. Roll will make it January of the same year, not next year. "	use expiry.add(Calendar.MONTH, 1);
+
+Summarizing the behavior of the ? extends and the ? super wildcards, we draw the following conclusion:
+Use the ? extends wildcard if you need to retrieve object from a data structure 
+Use the ? super wildcard if you need to put objects in a data structure 
+If you need to do both things, don't use any wildcard. 
+This is what Maurice Naftalin calls The Get and Put Principle in his Java Generics and Collections and what Joshua Bloch calls The PECS Rule in his Effective Java.
+http://thegreyblog.blogspot.com.au/2011/03/java-generics-tutorial-part-i-basics.html#!/2011/03/java-generics-tutorial-part-i-basics.html"
+
+Error:
+Cannot modify primitive param in a method
+Cause:
+primitives are passed by value and not by reference.
+Fix:
+If you need to pass a primitive or an immutable object as a parameter in a method, 
+where you want the value reflected outside the method, you can use a single element array.
+http://www.java-tips.org/java-se-tips/java.lang/pass-an-integer-by-reference.html
+If this is too high tech for you, you can use commons.lang.MutableLong
+, commons.lang.MutableObject, etc."
+
+Error:
+When creating a SimpleDateFormat parser utility class, don't make the DateFormat a member variable.
+Cause:
+The cause of the problem is that a value (the date portion of calendar) used only for the duration of a single public method (parse) is stored as a member variable.  (This design flaw was inspired by another design flaw of a similar  customer  in Calendar, but let's not go there.)
+http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4228335
+From Javadoc 1.6 http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html
+Date formats are not synchronized. It is recommended to create separate format instances for each thread. If multiple threads access a format concurrently, it must be synchronized externally. 
+Fix:
+Create on the fly.
+http://www.codefutures.com/weblog/andygrove/2007/10/simpledateformat-and-thread-safety.html"
+
+Error: java.io.IOException: error=11
+Cause: Not enough threads available to run Process
+Fix:
+http://stackoverflow.com/questions/8384000/java-io-ioexception-error-11

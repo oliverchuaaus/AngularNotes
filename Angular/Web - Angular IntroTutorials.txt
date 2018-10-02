@@ -1,0 +1,34 @@
+To start, follow: https://angular.io/docs/ts/latest/
+Quickstart: https://angular.io/docs/ts/latest/quickstart.html
+Tutorial: https://angular.io/docs/ts/latest/tutorial/
+Guide: https://angular.io/docs/ts/latest/guide/
+Advanced: https://angular.io/docs/ts/latest/guide/ngmodule.html
+
+Complete rewrite of AngularJS
+Competing techs: 
+ReactJS - used by facebook
+
+Multiple languages to implement ng2:
+Typescript - default
+Javascript
+
+Sample Codebase of ng2 and spring data and mvc rest:
+https://github.com/sivaprasadreddy/sivalabs-blog-samples-code/tree/master/spring-data-rest-demo
+
+Sample Codebase of ng2 and spring boot:
+https://github.com/zouabimourad/angular2-spring
+
+Collection of Angular Tutorials:
+https://github.com/zouabimourad/angular2-education
+
+
+
+Installation:
+a. Install nodejs, v4.x.x at least
+via installer
+Test: Run node -v
+b. install/upgrade npm, v3.x.x at least
+npm install npm@latest -g
+Test: Run npm -v
+c. update angular to latest?
+npm install @angular/core@latest

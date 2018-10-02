@@ -1,0 +1,15 @@
+1. proxy?
+http://stackoverflow.com/questions/5991194/gradle-proxy-configuration
+
+2. peer not authenticated?
+http://stackoverflow.com/questions/26675814/gradle-could-not-head-https-pom-peer-not-authenticated
+maven  {
+	url "http://repo1.maven.org/maven2"
+}
+
+3. eclipse plugin?
+https://gradle.org/eclipse/
+http://download.eclipse.org/buildship/updates/e46/releases/1.0
+
+4. import gradle?
+specify external gradle

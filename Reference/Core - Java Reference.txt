@@ -1,0 +1,15 @@
+Reference:
+Exception-Handling Antipatterns
+http://today.java.net/pub/a/today/2006/04/06/exception-handling-antipatterns.html
+
+Generics Tutorial 
+http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf
+
+Theory:
+There are two types of Date objects: java.sql (without time) and java.util (with time)
+When parsing 
+java.util.Date date = DateFormat.parse("2010-02-28");
+it sets the time to current time,
+so be careful if you rely on exact match of the date only.
+If the field is date only, better to convert it to a java.sql.Date
+java.sql.Date date = new java.sql.Date(utilDate.getTime());

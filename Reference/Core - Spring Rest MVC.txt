@@ -1,0 +1,155 @@
+Spring MVC 3
+
+web.xml
+<web-app>
+  <servlet>
+    <servlet-name>mvc-dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>mvc-dispatcher</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>  
+  
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      /WEB-INF/prattle-servlet.xml
+      classpath:dataSource-context.xml
+      classpath:persistence-jpa-context.xml
+      classpath:service-impl-context.xml
+    </param-value>
+  </context-param>
+
+</web-app>
+
+servlet-context.xml
+<context:component-scan base-package="com.tougher.prattle.mvc" />
+<!-- Specify static folder so it is not processed dynamically by DispatchServlet -->
+<mvc:resources mapping="/resources/**" location="/resources/" />
+<mvc:annotation-driven />
+
+<!-- Tiles Resolver -->
+<bean class="org.springframework.web.servlet.view.tiles2.TilesViewResolver" />
+<!-- Tiles Config -->
+<bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+	<property name="definitions">
+		<list>
+			<value>/WEB-INF/pages/**/tiles.xml</value>
+		</list>
+	</property>
+</bean>
+
+
+@Controller
+@RequestMapping("/welcome")
+public class MyController{
+  @RequestMapping(method = RequestMethod.GET){
+  public String printWelcome(@RequestParam(value="name", required=false, defaultValue="World") String name, ModelMap model){
+    model.setAttribute("message","Hello "+ name + "!");
+    return "hello";
+  }
+}
+
+/WEB-INF/pages/hello.jsp
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<html>
+<body>
+  <h1>Message : ${message}</h1>	
+</body>
+</html>
+
+
+Summary:
+Declare DispatcherServlet in xml, and specify context.xml under ContextLoaderListener
+Declare ViewResolver in context.xml to map view string to views.
+DeclareController to interecept requests
+
+DispatcherServlet is a front controller. used to intercept requests and map to Controller class
+InternalResourceViewResolver to convert string to view resource
+Controller class matching request and request method will call method, setting model attributes, then returning string
+
+
+
+@RequestMapping class and method level
+
+Samples:
+a. Simple
+	@RequestMapping("/home")
+	public String homePage(Model model){
+	  model.addAttribute("list",list);
+	  return "home";	
+	}
+b. Path Variable
+	@RequestMapping(value="/home/{user}", method=RequestMethod.GET)
+	public String showUserPage(@PathVariable String user, Map<String, Object> model)){
+	  model.put("user",user);
+	  return "userPage";	
+	}
+c. check if params has param name = new
+	@RequestMapping(method = RequestMethod.GET, params = "new")
+	public String createNewUser(Model model) {
+	}
+d. save form with validation and multipart
+	@RequestMapping(method = RequestMethod.POST)
+	public String addPrattlerFromForm(@Valid Prattler prattler,
+	BindingResult bindingResult,
+	@RequestParam(value = "image", required = false) MultipartFile image) {
+	  if (bindingResult.hasErrors()) {
+	    return "prattlers/edit";
+	  }  
+	  else 
+	    FileUtils.writeByteArrayToFile(file, image.getBytes());
+	    return "redirect:prattlers/success";
+	}
+e. json
+CREATE
+	@RequestMapping(method = RequestMethod.POST, headers = "Content-Type=application/json")
+	@ResponseStatus(HttpStatus.CREATED)
+	public @ResponseBody Spitter createSpitter(@RequestBody Spitter spitter) {
+	  spitterService.saveSpitter(spitter);
+	  return spitter;
+	}
+	
+RETRIEVE
+	@RequestMapping(value = "/{username}", method = RequestMethod.GET, headers = {"Accept=text/xml, application/json"})
+	public @ResponseBody Spitter getSpitter(@PathVariable String username) {
+	  return spitterService.getSpitter(username);
+	}
+
+UPDATE
+	@RequestMapping(value = "/{username}", method = RequestMethod.PUT, headers = "Content-Type=application/json")
+	@ResponseStatus(HttpStatus.NO_CONTENT) 
+	public void updateSpitter(@PathVariable String username, @RequestBody Spitter spitter) {
+	  spitterService.saveSpitter(spitter);
+	}
+
+DELETE
+	@RequestMapping(value="/{username}", method=RequestMethod.DELETE)
+	public String deleteSpitter(@PathVariable String username) {
+	  return "redirect:/home";
+	}
+
+
+for errors for field
+<sf:errors path="fullName" cssClass="error" />
+
+
+RESTful Services Naming Convention 
+http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
+
+GET /tickets - Retrieves a list of tickets
+GET /tickets/12 - Retrieves a specific ticket
+POST /tickets - Creates a new ticket
+PUT /tickets/12 - Updates ticket #12
+PATCH /tickets/12 - Partially updates ticket #12
+DELETE /tickets/12 - Deletes ticket #12
+
+http://www.restapitutorial.com/lessons/restfulresourcenaming.html
+GET http://www.example.com/customers/{customerID}
+GET http://www.example.com/customers/{customerID}/orders/{orderID}

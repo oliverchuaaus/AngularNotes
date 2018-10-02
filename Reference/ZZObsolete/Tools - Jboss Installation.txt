@@ -1,0 +1,12 @@
+JBoss 7 Installation:
+
+To Access Admin Console
+run add-user.bat script
+admin/admin1
+
+Add DataSource
+For Oracle:
+http://stackoverflow.com/questions/12049882/jboss-7-oracle-datasource-configuration
+For MySQL:
+https://community.jboss.org/wiki/DataSourceConfigurationInAS7
+

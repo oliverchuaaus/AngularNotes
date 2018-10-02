@@ -1,0 +1,12 @@
+@WebService
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+public class MyJaxWS{
+
+  @WebMethod
+  public Record echo(String username, String password){
+    return new Record(username, password);
+  }
+}	
+
+
+Deploy as war, and JBoss will automatically convert as WS.

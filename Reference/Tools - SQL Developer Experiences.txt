@@ -1,0 +1,6 @@
+1.SQL Developer doesn't show time in data browser
+http://blogmines.com/blog/2010/03/12/how-to-show-or-display-date-time-values-in-oracle-sql-developer/
+Go to Tools > Preferences > Type: NLS > Type: ‘DD-MON-YYYY HH24:MI:SS’ in Date Format
+
+2. Turn on Line Numbers
+Go to Tools > Preferences > Type: Line Gutter > Check Show Line Numbers

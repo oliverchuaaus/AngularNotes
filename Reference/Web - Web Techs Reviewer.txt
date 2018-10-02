@@ -1,0 +1,106 @@
+HTML
+declare text field
+<input type="text" name="firstname" />
+
+
+
+CSS
+3 ways to declare css
+a. inline
+<h1 style="color: maroon;">Hello World</h1>
+b. internal
+<style>
+h1 {color: maroon;}
+</style>
+
+<h1>Hello World</h1>
+c. external
+<link rel="stylesheet" type="text/css" href="mycss.css"/>
+
+3 selectors
+a. element	p, etc.	
+b. id		#
+c. class	.
+
+
+
+Javascript
+2 ways to declare javascript?
+a. Internal
+<script type="javascript">
+alert('Test');
+</script>
+b. External
+<script src="myjs.js"/>
+
+how to select using dom?
+document.getElementById("el1");
+
+2 ways to hide elements?
+//display - collapses
+document.getElementById("el1").style.display="none"; //block
+//visibility - does not collapse
+document.getElementById("el1").style.visibility="hidden"; //visible
+
+how to declare array?
+var arr[];
+
+
+
+
+JQuery
+How to load jquery?
+<script src="jquery.js"></script>
+
+3 Types of selectors?
+element		
+id	#
+class	.
+
+How to select element named el1
+$("el1")
+
+how to change html?
+$("#myid").html="<b>Testing!</b>"
+
+how to create object and convert to json?
+var obj = new Object();
+obj.name="Kris";
+obj.address=new Object;
+obj.address="Ashfield";
+obj.height="1.73";
+vat myString = JSON.stringify(obj);
+
+
+AJAX
+$("button").click(function(){
+    $("#div1").load("demo_test.txt", function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success")
+            alert("External content loaded successfully!");
+        if(statusTxt == "error")
+            alert("Error: " + xhr.status + ": " + xhr.statusText);
+    });
+});
+
+$("button").click(function(){
+  $.post("demo_test_post.asp",
+  {
+    name:"Donald Duck",
+    city:"Duckburg"
+  },
+  function(data,status){
+    alert("Data: " + data + "\nStatus: " + status);
+  });
+});
+
+
+
+
+JSON
+{
+"name": "Kris"
+"address":{
+    "suburb": "Ashfield"
+  },
+"height": "1.73"    
+}

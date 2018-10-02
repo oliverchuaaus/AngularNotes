@@ -1,0 +1,149 @@
+Basic Functionality:
+Add record
+Update record
+Delete record
+Validate record
+Query records
+
+Add record:
+provide an empty record, let user enter details
+and provide an add button which will add the details and provide another empty record.
+OR
+provide add new record button,
+
+Update record: 
+separate form or inline editing
+auto save on blur
+
+Delete record:
+provide delete button or link for each record
+OR
+provide checkboxes for each record and one delete button
+
+Validation:
+auto validation should pinpoint row.
+auto validation requiredif on the same row
+manual validation should pinpoint row.
+component being used in multiple use cases: e.g. address
+varying fields depending on chosen radio button.
+lookup of a field, alternative to a drop down list if there are too many values.
+
+Search Results:
+Pagination
+Sortable
+css - result panel has vertical and horizontal scrollbar, if certain threshold.
+multi box to select
+select all for each subsection
+multiple buttons to act on results
+results has multiple lists
+link has more than one parameter
+some elements in object graph are nullable
+
+Forms:
+objects that are nested, multiple objects
+hide/unhide parts of the form.
+refreshing form when DDL value is changed.
+retain form elements in session without using session scope for bean.
+way to add and delete rows.
+be able to show existing.
+be able to update.
+be able to retain value when validation fails.
+save fails when concurrently changed
+
+Validation:
+support for warning messages - yes/no
+combination warning and error
+warning has more than one choice, choices are checkboxes.
+support for success messages
+messages for particular fields
+warning message contains list, if too many values, should have a scrollbar
+
+Components:
+tabbed panes - param is common for all
+menu collapsible
+multi step form
+
+UI:
+panels for form and results
+hover over link and floating textbox appears, hover out text disappears
+click link, stack trace appears
+click again, stack trace disappears
+javascript:
+show hide div
+auto-fill field if radio button is chosen
+calendar for date entry
+Ajax:
+Refresh part of screen only, not whole page
+
+
+
+
+
+
+
+
+
+
+
+
+
+Scheduled Jobs:
+Jobs scheduled at a certain time
+What if the job hangs?
+Can they be run in parallel?
+Logging 
+Alerting when something goes wrong
+When run is missed, should we compensate?
+monitor jobs
+
+Historical:
+audit every update
+triggers
+Delete physically vs mark as deleted
+Support for undelete
+
+Database Changes:
+a. new table
+b. new column
+c. change column length
+d. change column type
+e. delete column
+f. rename column
+
+Database test:
+When using existing test data, how to slice a subset of the database?
+How to generate test data?
+How to encode real world data
+
+File Upload:
+text file or csv, excel?
+format or schema or dtd?
+logging, alerting,
+all or nothing transaction?
+Multiple
+Drag and Drop
+
+Report Generation:
+fixed length text
+csv
+excel with multiple tabs
+pdf
+word doc
+charts in pdf, excel
+Document Generation: Word Doc, Excel, CSV, PDF Generation 
+	http://stackoverflow.com/questions/7355025/create-pdf-with-java
+	http://stackoverflow.com/questions/1176080/create-excel-file-in-java
+
+Messaging:
+Queue
+Topic
+
+Email:
+subscription
+unsubscribe
+notifications
+
+Encryption:
+Password encryption
+SSL
+

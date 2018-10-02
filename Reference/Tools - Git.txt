@@ -1,0 +1,5 @@
+Add ignore file patterns
+
+run: git config --global core.excludesfile "C:\Work\TortoiseGit\settings\ignore.txt"
+it will create or update file HOME/.gitconfig
+Reference: http://stackoverflow.com/questions/640449/git-dont-show-me-pyc-in-the-list-of-untracked-files/640668#640668

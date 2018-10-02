@@ -1,0 +1,30 @@
+Spring
+
+Java based Config
+5 annotations for Config
+Annotation for Bean
+Annotation for Prototype
+
+Autowiring
+3 ways autowire resolve DI
+3 autowire annotations
+How autowire annotation resolve DI?
+3 Bean Annotations
+
+Database
+How to setup db?
+4 steps
+
+7 Propagation Attributes	EXISTING		NO EXISTING
+3 Isolation Issues
+5 Isolation Levels
+
+JMS
+How to setup listener?
+3 steps
+
+How to setup sender?
+4 steps
+
+How to setup topic?
+How to make subscription durable?

@@ -1,0 +1,4 @@
+MQ not starting after password changed
+run in cmd then start service manually
+AMQMSRVN -user <domain>\<username> -password <password
+https://www.ibm.com/developerworks/community/forums/html/topic?id=77777777-0000-0000-0000-000014908371

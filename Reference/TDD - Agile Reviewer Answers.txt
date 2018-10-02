@@ -1,0 +1,22 @@
+Agile Manfiesto:
+4 Agile Manifesto items:
+Individuals and interactions OVER processes and tools
+Working software OVER comprehensive documentation
+Customer collaboration OVER contract negotiation
+Responding to change OVER following a plan
+
+
+5 Main Practices:
+User stories
+Daily Scrum meetings
+Fortnight sprints
+Peer testing and CI (continuous integration)
+TDD (test driven development)
+
+Other Practices:
+Kickoff - start a story, and discuss with product owner, BA, tester
+Shoulder Check - end of story demo, catch simple defects
+Sprint Planning
+Backlog refinement or grooming
+Retrospect - end of sprint 
+

@@ -1,0 +1,17 @@
+Pricehipster
+
+Technical:
+1. Scraper API: Jaunt
+2. Need to add layer for pluggable custom scraping
+
+
+1. Discount cycles are different (2 weeks chemist warehouse, 1 week supermarket)
+2. Some catalogs are area specific
+
+Current issues:
+1. Some prices spikes up, then down. discount should not be relative to last price 
+2. Same product on different supermarkets, treated as different
+3. Some products are exclusive to a supermarket i.e. unique size but same product
+4. Alerts only at the start of discount, better to have early alerts?
+5. No login, relies on link from email. However, some proxy lose session so need to continually relogin
+6. Not excluded if sold out

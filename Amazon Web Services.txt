@@ -1,0 +1,38 @@
+Elastic Beanstalk - web application
+Cognito - authentication
+Lambda - backend service
+DynamoDB - NoSQL DB
+
+S3 - Simple Storage Service
+EC2 - Elastic Compute Cloud
+Elastic Beanstalk - servet - Java, Node.js, 
+
+
+Create Static Website:
+CloudFront - hosting
+Route 53 - dns routing
+a. create bucket
+b. upload index.html
+c. enable bucket hosting: properties > static web hosting
+d. allow access to bucket resources: permission > bucket policy
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AddPerm",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::delme1/*"
+        }
+    ]
+}
+
+* Angular can be deployed in S3, but HashLocationStrategy needs to be used.
+
+
+Deploy java spring boot app
+https://aws.amazon.com/blogs/devops/deploying-a-spring-boot-application-on-aws-using-aws-elastic-beanstalk/
+a. Setup mysql db
+b. change port
+c. set connection details

@@ -1,0 +1,28 @@
+Java EE Tutorial 6
+
+@Path
+
+@GET
+@POST
+@PUT
+@DELETE
+
+@HEAD
+@OPTIONS
+
+@PathParam	/url/param1/param2
+@QueryParam	/url?var1=value1&var2=value2
+@MatrixParam	/url;var1=value1;var2=value2
+@FormParam	/url
+@HeaderParam	/url
+@CookieParam	/url
+@Context
+
+@Consumes
+@Produces
+@Provider
+
+
+/vip	path, first slash optional, behaves the same with or without
+{name}	path param
+users/{username: [a-zA-Z][a-zA-Z_0-9]*}	path param with regexp

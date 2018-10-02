@@ -1,0 +1,46 @@
+Why use?	
+Freeware lightweight oracle server from Oracle
+
+How to change http port from 8080 to 8081?
+CONNECT SYSTEM/george#
+EXEC DBMS_XDB.SETHTTPPORT(8081);
+Source: http://download.oracle.com/docs/cd/B25329_01/doc/admin.102/b25107/network.htm#BHCBABJB
+
+How to get http port?	
+select dbms_xdb.gethttpport as "HTTP-Port", dbms_xdb.getftpport as "FTP-Port" from dual;
+Source: http://daust.blogspot.com/2006/01/xe-changing-default-http-port.html"
+
+What is the url for XE?
+jdbc:oracle:thin:@localhost:1521:XE
+	
+How to fix this error?	
+ORA-12518: TNS:listener could not hand off client connection
+OR in junit, connection cannot be opened.
+Run the command: 
+alter system set processes=800 scope=spfile; 
+and restart DB
+Run the command:
+show parameter processes; to verify processes has been increased to 800
+Source: http://stackoverflow.com/questions/87230/how-to-edit-sessions-parameters-on-oracle-10g-xe
+
+How to disable password expiry?
+Run to disable expiry:
+ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
+Run to check expiry:
+SELECT resource_name, limit
+FROM dba_profiles
+WHERE profile = 'DEFAULT'
+AND resource_type = 'PASSWORD';
+Source: https://mikesmithers.wordpress.com/2013/07/28/turning-off-password-expiration-on-oracle-xe-and-apex/
+
+How to add Oracle database to Maven Repository?
+mvn install:install-file -Dfile=<Path/to/your/ojdbc.jar> -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar
+
+<!-- ORACLE database driver -->
+<dependency>
+	<groupId>com.oracle</groupId>
+	<artifactId>ojdbc6</artifactId>
+	<version>11.2.0</version>
+</dependency>
+Source: http://www.mkyong.com/maven/how-to-add-oracle-jdbc-driver-in-your-maven-local-repository/
+

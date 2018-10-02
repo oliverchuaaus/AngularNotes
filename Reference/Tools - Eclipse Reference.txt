@@ -1,0 +1,76 @@
+References:
+Update Sites:
+Subclipse	Subversion	http://subclipse.tigris.org/update_1.8.x
+M2Eclipse	Maven	http://m2eclipse.sonatype.org/sites/m2e
+		
+FindBugs	FindBugs	http://findbugs.cs.umd.edu/eclipse
+CPD	Copy Paste Detector	http://pmd.sf.net/eclipse
+Checkstyle	Checkstyle	http://eclipse-cs.sf.net/update/
+
+Eclipse Use Cases:
+1. You need to open a class
+    a.  copy class name (it might be long)
+    b.  ctrl-shift-R for Open Resource popup - classes with source code in workspace
+    c.  OR ctrl-shift-T for Open Type popup - classes in jars in workspace
+    c.  paste class name
+    d.  double click or click Ok
+    e. You can use initials by using capital letters.
+    e.g. RuleManagerImpl is found by typing RMI.
+2. There's an error, you have class name and line number, do this:
+    a. memorise line number 
+    b. open class 
+    c. ctrl-L to open Go to Line popup.
+    d.  type in line number then enter to jump to line
+3. You're manually tracing code, you want to follow the code down, do this: 
+    a. position cursor to method name 
+    b. press F3 to drill down 
+    c.  OR ctrl then click on method name
+    d. to go back and forth, press alt-left and alt-right(works like IE history)
+4. You're manually tracing code, you want to follow the code down, but the object is an interface, do this: 
+    a. position cursor to method name 
+    b. press ctrl-t to show Type Hierarchy popup 
+    c. click on correct subclass (usually just one)
+    d.  cursor will jump to correct class and even the correct method
+5. You’re manually tracing code, you want to see what other methods are calling this method:
+    a. right click on method name and choose call hierarchy. 
+    b. you can drill down to see who calls the caller and so on. OR 
+    c. right click on method name and choose References -> Workspace. 
+    d. search tab will appear containing list of referencing code.
+    e.  when there are several matches, click the numpad * to expand all folders.
+6. You are tracing code via debug 
+    a. F6 to trace over. 
+    b. F5 to trace into. 
+    c. F7 to step out of this method. 
+    d. F8 to let it run until it encounters another breakpoint or stops. 
+    e. ctrl-R to let debugger run until it hits this line.
+    f.  if you need to go back to an excuted line, even in another class, go to that line and click Step Return
+7. You have changed the code and want to save the changes.
+    a. ctrl-shift-O to organize import statements so they are arranged alphabetically
+    b. ctrl-shift-F to reformat the file so it has correct indentation
+    c. ctrl-S to save file changes
+8. You want to format and organize imports of all files
+    a. right click src folder and select Source > Format 
+    b. right click src folder and select Source > Organize Imports
+9. The server view is usually on the same part of the screen as the console. We usually have to start and stop the server, but since it is one of the tabs (together with the console tab, problems tab), the server view's position is not fixed. It takes some time to find it. Using fast view puts a view in a stationary position where you can click on the small icon to open it. It also automatically closes if you click on other windows. Fast view also works well with the repository history view.
+10. When developing and maintaining code, we want to focus on one module. Package explorer by default gives us the whole project. We can use Working Sets to partition the project into modules. To use Working Sets: 
+    a. On the package explorer window, click on the inverted triangle -> Select Working Set. 
+    b. Click New Button and choose which folders to include in your new working set. 
+    c. You usually would have one working set open, but if you want, you can choose to have two or more working sets.
+11. Useful Windows Shortcuts: 
+    a. Numpad * to explode folders. i.e. open all subfolders. You can also use this in Windows Explorer, Subversion, etc. 
+    b. Numpad - to implode folders. 
+    c. ctrl - right or left to skip words instead of letters. 
+12. Other eclipse shortcuts:
+http://www.n0sl33p.org/dev/eclipse_keys.html
+
+Step Return and how transactions will not be reverted
+http://collectionofsolutions.blogspot.com.au/2009/06/where-does-eclipse-store-its-launch.html
+
+Batch code format and organize imports
+http://www.javalobby.org/java/forums/t41120.html
+
+10 Eclipse Navigation Shortcuts Every Java Programmer Should Know
+http://rayfd.me/2007/05/20/10-eclipse-navigation-shortcuts-every-java-programmer-should-know/
+
+Tips for using Eclipse effectively
+http://www.aspectprogrammer.org/blogs/adrian/2006/02/tips_for_using.html

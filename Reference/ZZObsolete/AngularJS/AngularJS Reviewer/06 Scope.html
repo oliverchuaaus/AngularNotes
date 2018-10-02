@@ -1,0 +1,29 @@
+<html>
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+
+
+Outside scope: {{color}}
+
+<div ng-app="myApp">
+
+	$rootScope: {{color}}
+
+	<div ng-controller="myCtrl">$scope: {{color}}</div>
+
+	<script>
+		var app = angular.module("myApp", []);
+		app.run(function($rootScope) {
+			$rootScope.color = "Red";
+		});
+
+		app.controller("myCtrl", function($scope) {
+			$scope.color = "Blue";
+		});
+	</script>
+
+
+
+	</form>
+</html>

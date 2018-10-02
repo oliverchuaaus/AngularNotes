@@ -1,0 +1,195 @@
+Angular2 Theoretical:
+https://angular.io/docs/ts/latest/guide/
+
+ARCHITECTURE
+
+3 main files:
+main.ts
+app.module.ts
+app.component.ts
+
+Building blocks:
+Modules
+Components
+Templates
+Metadata
+Data binding
+Directives
+Services
+Dependency Injection
+
+Modules:
+2 types of modules:
+a. root (only one) - 
+b. feature (one per workflow or functionality)
+	a. angular library modules (@angular/core, etc.)
+	b. custom modules
+
+Root module - app.module.ts AppModule
+marked by @NgModule decorator (decorator ~ annotation)
+
+@NgModule properties:
+a. declarations - which components are available
+b. exports - which componented needed by other modules
+c. imports - which components are needed by components
+d. providers -  services
+e. bootstrap - the root module
+
+Components:
+e.g. herolist-component.ts
+Component properties:
+a. selector - tag name to include component
+b. moduleId - base address for relative url
+c. templateUrl - template html file 
+d. providers - services (new instance per component instance)
+
+Templates:
+e.g. herolist-component.html
+
+Metadata:
+metadata are added via decorators
+e.g. @NgModule, @Component
+
+Data binding:
+4 forms of binding syntax:
+a. {{value}}				e.g. <li>{{hero.name}}</li>								from component to dom (interpolation)
+b. [property]="value"		e.g. <hero-detail [hero]="selectedHero"></hero-detail>	from component to dom (property binding)
+c. (event) = "handler"		e.g. <li (click)="selectHero(hero)"></li>				from dom to component (event binding)
+d. [(ng-model)]="property"	e.g. <input [(ngModel)]="hero.name">					from dom to component and vice versa (two way data binding) 
+
+Directives:
+3 types:
+a. components - custom directives
+b. structural - changes dom
+*ngFor
+*ngIf
+c. attribute -  alters appearance or behaviour of existing element
+<input [(ngModel)]="hero.name">
+
+Services:
+acts as controller for view and model
+
+Dependency injection:
+inject services via providers
+providers can be in component, but will create one instance of service per component.
+
+
+ROOT MODULE
+BIPED - bootstrap, import, providers, export, declarations
+import - importing component not the same as importing javascript elements
+declarations - declaring only components (with @Component), not classes
+
+DISPLAYING DATA
+-
+
+USER INPUT
+Click:
+<button (click)="onClickMe()">Click me!</button>
+Keyup:
+<input (keyup)="onKey($event)">
+  onKey(event:any) { // without type info
+    this.values += event.target.value + ' | ';
+  }
+Keyup without uisng Event:
+<input #box (keyup)="onKey(box.value)">
+<p>{{values}}</p>
+  onKey(value: string) {
+    this.values += value + ' | ';
+  }  
+Keyup only for enter:
+<input #box (keyup.enter)="onEnter(box.value)" (blur)="update(box.value)">
+<p>{{value}}</p>
+  onEnter(value: string) { this.value = value; }
+  
+  
+  
+FORMS
+ng-touched, ng-untouched		
+ng-dirty, ng-pristine
+ng-valid, ng-invalid
+form.reset() to reset flags
+
+disable submit button if form is invalid
+<form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+...
+<button type="submit" class="btn btn-default" [disabled]="!heroForm.form.valid">Submit</button>
+
+
+DEPENDENCY INJECTION
+Providers can be declared in any component.
+Provider will be available to any child and descendant components.
+Dependencies should be declared in the constructor of components, to facilitate easier testing and automatic DI.
+DI will instantiate classes based on classes declared in providers section
+
+Simplest: providers : [MyService, MyClass]
+Longhand: providers : [{provide:MyService, useClass:MyService}]
+Subclass: providers : [{provide:MyService, useClass:MyServiceSubclass}]
+reuse same instance : [{provide:MyService, useExisting:MyService}]
+object shaped as class: providers : [{provide:MyService, useValue:myServiceShapedObject}]
+						let myServiceShapedObject = { name:'Alpha', male:true => {}} 
+Opaque Token for interface: providers : [{provide:MY_TOKEN, useValue:MY_IMPL}]
+						export let MY_TOKEN = new OpaqueToken("my.config");
+
+						
+						
+						
+TEMPLATE SYNTAX
+Html
+	script is ignored
+	html, body and base are meaningless
+Interpolation
+	Can be property of component model or generally an expression
+Template expression	
+	JS expressions with side effects are forbidden: =, +=, ++, etc., new, chaining expressions (; or ,), bitwise operators (| or &)
+	Support for template expression operators (| pipes and ? safe navigation operator)	
+	Cannot reference document, window, console, Math.max, etc.
+	Can only refer to component instance (variable or method) or template reference variables (e.g. $event)
+Template statements	
+	(event)="statement"
+	Can use = and chaining expressions (; or ,)
+	Cannot use =,+=,++, bitwise operators (| or &),template expression operators(|,?)
+	context is the current component or template reference variables (e.g. $event)
+Binding syntax
+	One way from data source to view target:
+		interpolation		{{expr}}
+		property attribute	[target]=expr
+		class style			bind-target=expr
+	One way from view target to data source:
+		event				(target)="stmt"
+							on-target="stmt"
+	Two way:
+		two way				[(target)]="expr"
+							bindon-target="expr"
+	Template binding works with properties and events, not attributes. 
+	Atribute is the initial value of the attribute, property can change depending on current value of input box.
+	Binding targets:
+		Property:
+			element		<img [src]="imgURL">
+			component	<hero-detail [hero]="currentHero"></hero-detail>
+			directives	<div [ngClass]="{selected:isSelected}"></div>		
+		Event:					
+			element		<button (click)="onSave()"><Save>
+			component	<hero-detail (delete)="deleteHero()"></hero-detail>
+			directives	<div (myClick)="clicked=$event">Click Me</div>
+		Two-way:		event and property	<input [(ngModel)="heroName"]
+		Attribute:		<button [attr.aria-label]="help">Help</button>
+		Class: 			<div [class.special]="isSpecial">Special</div>
+		Style: 			<button [style.color]="isSpecial? 'red': 'green'">Submit</button>
+							
+Property binding
+Attribute, class, and style bindings
+Event binding
+Two-way data binding
+Two-way data binding with NgModel
+Built-in directives
+* and <template>
+Template reference variables
+Input and output properties
+Template reference operatoors
+	Pipe (|)
+	Safe navigation operator (?)
+	
+	
+CHEAT SHEET
+
+STYLE GUIDE

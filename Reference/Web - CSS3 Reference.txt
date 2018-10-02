@@ -1,0 +1,6 @@
+Borders
+
+Rounded Corners
+border-radius:25px; //0px results in a square
+box-shadow:10px 10px 5px gray;
+border-image:url(border.png) 30 30 round;

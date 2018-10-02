@@ -1,0 +1,92 @@
+LESS
+
+VARIABLES
+@default_color : blue;
+
+p{
+	color: @default_color;
+}
+
+MIXINS with params
+.fartsy(@size:14px){
+  fonts-size:@size;
+}
+.fartsy-headline{
+  .fartsy(10px);
+}
+NESTING
+ul{
+  font-size:14px;	
+  li{
+	font-size:11px;	
+  }
+}
+SCOPE
+@color:black;
+ul{
+  @color:yellow;	
+  li{
+	color:@color;	
+  }
+}
+/*li will be yellow*/
+
+OPERATIONS
+@color:yellow;	
+title{
+  color: color-100;
+}
+
+FUNCTIONS
+@color:blue;
+
+div{
+	&:hover{
+		color: fadeout(@color:50%);
+	}
+}
+
+
+
+
+
+SCSS
+SASS - older version that uses indentation instead of brackets
+
+VARIABLES
+$defcolor:blue;
+
+.arty{
+	color: $defcolor; 
+}
+
+MIXINS with params
+@mixin fartsy(@size:14px){
+  fonts-size:@size;
+}
+.fartsy-headline{
+  @include fartsy(10px);
+}
+EXTEND
+.fartsy(@size:14px){
+  fonts-size:@size;
+}
+.fartsy-headline{
+  @extend .fartsy(10px);
+}
+NESTING
+ul{
+  font-size:14px;	
+  li{
+	font-size:11px;	
+  }
+}
+OPERATIONS
+$color:yellow;	
+title{
+  color: $color/2;
+}
+FUNCTIONS
+.test{
+  color: darken(blue, 10%);
+}

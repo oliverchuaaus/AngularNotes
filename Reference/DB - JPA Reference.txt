@@ -1,0 +1,475 @@
+Reference:
+
+Map enum that's not ordinal nor name
+http://stackoverflow.com/questions/2751733/map-enum-in-jpa-with-fixed-values
+
+Enums in NamedQuery.
+Solution: Fully qualified name
+http://stackoverflow.com/questions/8217144/problems-with-making-a-query-when-using-enum-in-entity	
+
+
+From javaeetutorial6.pdf
+
+Java Persistence Architecture
+
+Mapping simple properties:
+By default, all are persisted, except transient modifier or @Transient annotation
+
+Class Level:
+@Entity
+
+Field Level:
+@Column
+@Lob - BLOB or CLOB depending on field type
+@Version
+@Basic
+@Transient
+@Temporal (Date, Time or Timestamp)- For Date/Time fields to store date only, time only or timestamp
+@Enumerated - for Enums, can store enum name (STRING) or integer (ORDINAL)
+
+Collection of basic types
+Collection
+Set
+List
+Map
+e.g.
+@ElementCollection(targetClass="java.lang.String", fetch=EAGER)
+private Set messages;
+
+
+Map mapping:
+@MapKeyColumn - to map basic type as key
+@MapKeyJoinColumn,@MapKeyJoinColumns - to map entity field/s as key
+@MapKeyClass - to explicitly specify class if generic type not used
+@MapKey - to set pk field name of entity (map value)
+targetEntity attribute of @OneToMany or @ManyToOne - to explicitly specify class if generic type not used
+
+
+Bean Validation:
+@Null, @NotNull
+@AssertTrue, @AssertFalse
+@Future, @Past
+@Max(100), @Min(0)
+@DecimalMax("100.00"), @DecimalMin("0.00")
+@Digits(integer=6, fraction=2)
+@Size(min=2, max=100)
+@Pattern("\\(\\d{3}\\)\\d{3}-\\d{4}")
+
+
+
+
+
+Primary Keys:
+@Id
+@GeneratedValue - global sequence is shared
+@SequenceGenerator - sequence is specified
+
+Composite PKs:
+a. Embedded Id:
+@Embeddedable - stand alone class that serves as PK
+@EmbeddedId - id field on user class
+b. Id Class:
+@IdClass  - class level annotation, stand alone class that serves as PK, but not used inside entity.
+fields corresponding to IdClass fields are marked as @Id 
+
+Embeddable Classes:
+@Embeddable - class is not standalone, but is a component of another class.
+@AttributeOverrides, @AttributeOverride - overrides default column name to prevent clashes.
+
+
+ 
+@JoinColumn - specify fk field
+@JoinTable - specify collection of JoinColumns in an association table
+
+
+
+Multiplicity in Entity Relationships:
+@OneToOne
+@OneToMany
+@ManyToOne
+@ManyToMany
+
+Direction in Entity Relationships:
+a. Bidirectional (owning side and inverse side)
+inverse side should say mappedBy="ownerfield"
+owning side table contains the fk
+b. Unidirectinal (owning side)
+
+Cascades:
+CascadeType.ALL 
+CascadeType.DETACH
+CascadeType.MERGE 
+CascadeType.PERSIST
+CascadeType.REMOVE
+CascadeType.REFRESH
+Orphan removal via @OneToMany(orphanRemoval="true")
+when list element is removed from list, it is marked for deletion in session.
+
+
+Inheritance:
+a. SINGLE_TABLE
+b. TABLE_PER_CLASS
+c. JOINED
+
+
+a. Single Table per Class Hierarchy - fields cannot be constrained as not null
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn
+@DiscriminatorValue
+
+b. Table per concrete entity class - many drawbacks in terms of polymorphic queries and associations
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+
+c. Joined Subclass - many joins
+@Inheritance(strategy=InheritanceType.JOINED)
+@PrimaryKeyJoinColumn - to override default pk field name
+
+d. Inherit properties from superclasses
+@MappedSuperclass - non-entity superclass whose fields will be mapped in subclass
+
+
+
+Mapping associations:
+One to One:
+a. two entities share the same primary keys values
+Owner Owned - Owner copies Owned PK.
+@OneToOne
+@PrimaryKeyJoinColumn
+
+b. a foreign key is held by one of the entities (note that this FK column in the database should be constrained unique to simulate one-to-one multiplicity)
+@OneToOne
+@JoinColumn(name = "passport_fk", unique=true)
+
+c. an association table is used to store the link between the 2 entities (a unique constraint has to be defined on each fk to ensure the one to one multiplicity)
+@OneToOne
+@JoinTable(name = "Customer2Passport2", , unique=true, joinColumns = @JoinColumn(name = "customer_fk"), inverseJoinColumns = @JoinColumn(name = "passport_fk"))
+
+
+Many to One:
+a. simple
+@ManyToOne
+@JoinColumn(name="COMP_ID")
+
+b. association table
+@ManyToOne
+@JoinTable(name="Flight_Company", joinColumns = @JoinColumn(name="FLIGHT_ID"),
+inverseJoinColumns = @JoinColumn(name="COMP_ID"))
+
+One to Many:
+a. simple
+One Class:
+@OneToMany(mappedBy="one")
+List<OneList> oneList;
+
+Many Class:
+@ManyToOne
+OneList one;
+
+
+b. inverted/aggregate
+One Class:
+@OneToMany
+@JoinColumn (name="one_fk")
+List<ManyList> manyList;
+
+Many Class:
+@ManyToOne
+@JoinColumn (name="one_fk" ,insertable=false, updateable=false)
+One one;
+
+
+
+c. unidirectional one to many without join table
+@OneToMany
+@JoinColumn(name="one_id", referencedColumnName="many_id")
+List<ManyList> manyList; 
+
+
+d. unidirectional one to many with join table, or default
+@OneToMany
+@JoinTable(name="One_Many",
+           joinColumns = @JoinColumn( name="one_id"),
+           inverseJoinColumns = @JoinColumn( name="man
+           y_id"))
+List<ManyList> manyList;
+
+Many to Many:
+Owner
+@ManyToMany(targetEntity = Slave.class)
+@JoinTable(name = "BossSlave", joinColumns = @JoinColumn(name = "BOSSING_ID"), inverseJoinColumns = @JoinColumn(name = "TRABAHADOR_ID"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Errors:
+org.hibernate.MappingException: Unknown entity: association.onetomany.Monkey2
+reason: not entered in hibernate.cfg.xml
+
+Caused by: org.hibernate.AnnotationException: Use of @OneToMany or @ManyToMany targeting an unmapped class: association.onetomany.Trainer2.monkeys[association.onetomany.Monkey2]
+reason: no @Entity annotation	
+
+
+JPA 2.0 What's New 
+1. standard Jdbc properties (instead of hibernate-specific)
+2. Access Mode to intermix FIELD and PROPERTY
+3. @ElementCollection
+4. JoinTable for OneToOne and OneToMany
+5. Orphan Removal via @OneToMany(orphanRemoval=true)
+6. Sorted List via @OrderColumn
+7. Derived Identifier via @IdClass and @Id field of a composite key is an FK
+8. TypedQuery
+
+Source: http://refcardz.dzone.com/refcardz/whats-new-jpa-20
+
+
+JPA Sensible Defaults
+@Table
+name = ClassName
+
+@Column
+if String: 
+length = VARCHAR2(255 CHAR)
+if Long:
+precision, scale = NUMBER(19,0)
+if Double, Float:
+FLOAT
+
+@DiscriminatorValue
+name = "DTYPE"
+value = ClassName
+
+DiscriminatorColumn
+discriminatorType = DiscriminatorType.STRING
+
+
+@JoinColumn - onetoone, manytoone
+owner table and its name will be the concatenation of the name of the relationship in the 
+owner side, _ (underscore), and the name of the primary key column(s) in the owned side.
+name = ClassName + "_" + ClassName.ID
+
+@JoinTable - manytoone, manytomany
+owner table, _ (underscore), and owned table
+name = ClassName1 + "_" + ClassName2
+
+Collection of primitive, core type or embedded objects is not supported by the EJB3 specification
+
+
+Many to one side almost always is the owner,
+and one to many side is the owned.
+
+
+
+Other JPA topics:
+Pagination
+query.setFirstResult()
+query.setMaxResults()
+
+External named queries
+HQL
+Filter
+Criteria
+Native SQL
+
+Cascade
+usually for one-to-one and one-to-many
+cascade types:
+none
+all
+delete-orphan - one-to-many only, unreferenced child will be auto-deleted.
+
+Optimistic Locking
+	versioning
+Pessimistic Locking
+
+LockMode
+OPTIMISTIC
+OPTIMISTIC_FORCE_INCREMENT
+PESSIMISTIC_READ
+PESSIMISTIC_WRITE
+PESSIMISTIC_FORCE_INCREMENT
+READ
+WRITE
+NONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+JPQL
+Query:
+String jpql = "SELECT c FROM Customers c WHERE c.name LIKE :custName";
+List<Customers> customers= em.createQuery(jpql).setParameter("custName","Mike").getResultList();
+
+Positional Parameters:
+String jpql = "SELECT c FROM Customers c WHERE c.name LIKE ?1";
+List<Customers> customers= em.createQuery(jpql).setParameter(1,"Mike").getResultList();
+
+Named Query:
+@NamedQuery(name="getCustomers",query="SELECT c FROM Customers c WHERE c.name LIKE :custName")
+List<Customers> customers= em.createNamedQuery(getCustomers).setParameter("custName","Mike").getResultList();
+
+
+BNF Backus Naur Form
+SELECT clause 
+FROM clause
+WHERE clause
+GROUP BY clause
+HAVING clause
+ORDER BY clause
+
+UPDATE clause
+WHERE clause
+
+DELETE clause
+WHERE clause
+
+
+Queries using Relationships:
+Player and Team @ManyToMany
+Team and League @ManyToOne
+
+Get players with teams
+SELECT DISTINCT p FROM Player p, IN(p.teams) t
+OR
+SELECT DISTINCT p FROM Player p JOIN p.teams t
+OR
+SELECT DISTINCT p FROM Player p WHERE p.teams IS NOT EMPTY
+
+Get players of a league
+SELECT DISTINCT p FROM Player p JOIN p.teams t WHERE t.league=:league
+
+Other conditional expressions:
+p.name LIKE 'M_ke%'
+t.league IS NULL
+p.teams IS EMPTY
+p.salary BETWEEN :min AND :max
+t MEMBER of p.teams
+
+Bulk Updates and Deletes
+
+
+
+FROM clause can be:
+a. entity
+b. element of a collection relationship
+c. element of a single value relationship
+d. element of a collection that is the many side of OneToMany relationship
+
+Identification Variables
+FROM Player p
+Range Variable Declarations
+FROM Player p, Player p2
+Collection Member Declarations
+FROM Player p, IN(p.teams) t
+
+LEFT OUTER JOIN
+get player with or without teams
+SELECT p FROM Player p LEFT JOIN p.teams t
+SQL equivalent: SELECT p.* from Player p LEFT OUTER JOIN Team t WHERE p.team_id=t.team_id;
+
+FETCH JOIN
+get player with or without teams AND teams info
+SELECT p FROM Player p  LEFT JOIN FETCH p.teams t
+
+Path expressions:
+a. Identification variable
+p.salary
+b. single-valued relationship field
+t.league.sport
+c. collection-vlued relationship field
+p.teams
+
+an expression cannot navigate beyond a persistent field or a collection-valued relationship field.
+illegal: p.teams.name (which one of the list?)
+
+WHERE clause literals:
+a. string
+b. numeric
+c. boolean
+d. enums
+
+Subqueries:
+EXISTS
+SELECT p FROM Player p WHERE NOT EXISTS (SELECT p.salary FROM Player p, IN (p.teams) t WHERE t.league.leagueId='NBA')
+ALL
+SELECT p FROM Player p WHERE p.salary <= ALL (SELECT p.salary FROM Player p)
+ANY
+SELECT p FROM Player p WHERE p.salary > ANY (SELECT p.salary FROM Player p, IN (p.teams) t WHERE t.league.leagueId='NBA')
+
+Functional Expressions:
+CONCAT
+SUBSTRING
+TRIM
+LOWER/UPPER
+LENGTH
+LOCATE
+CURRENT_DATE
+CURRENT_TIME
+CURRENT_TIMESTAMP
+
+CASE Expressions:
+UPDATE Player p
+SET p.sport =
+CASE t.league
+WHEN 'NBA' THEN 'Basketball' 
+END
+
+
+Select Clause Return Types
+Multiple expressions
+SELECT p, t
+FROM Player p JOIN p.teams t
+return Object[]
+
+Aggregate Functions
+AVG,COUNT,SUM
+MAX/MIN
+
+Constructor Expression
+SELECT NEW Name(p.firstname, p.surname)
+FORM Player p
+
+ORDER BY clause:
+can only order by fields available in select clause
+
+GROUP BY/HAVING clause:
+SELECT count(p) 
+FROM Player p, IN(p.teams) t
+GROUP BY t.league
+HAVING t.league=:league
+
+
+
+
+
+
+Criteria API:
+
+
+
+
+JPA Topics:
+Relational Mapping
+JPQL
+Criteria API
+Native SQL
+Pagination
+Caching

@@ -1,0 +1,117 @@
+Issue: Eclipse crashes with OutOfMemoryException
+Solution: Add this to shortcut C:\Java\eclipse-3.2\eclipse.exe -vmargs -Xms256m -Xmx512m -XX:MaxPermSize=256m 
+-Xms is the minimum heap memory -Xmx is the maximum heap memory
+
+Issue: Eclipse hovers popup when mouse rests in method name.
+Solution: To turn off annoying popups, follow this:
+http://stackoverflow.com/questions/1540036/how-to-turn-off-the-javadoc-hover-in-eclipse-or-selectively-enable-it
+However, other hovers like quick fix will be disabled as well.
+
+Issue: Server crashes with OutOfMemoryException
+Solution: Add this to run configuration under VM arguments 
+-Xms256m -Xmx512m -XX:MaxPermSize=256m 
+-Xms is the minimum heap memory -Xmx is the maximum heap memory
+
+Issue: Specify workspace on a shortcut if working on multiple workspacs
+Solution: To specify the workspace in a Windows shortcut to Eclipse use:
+C:\Java\eclipse\eclipse.exe -data C:\development\workspace\Project1
+
+Issue: Annoying thing - eclipse has no undo when accidentally moved folder or deleted something.
+Solution: Use SVN to revert changes. For deleted new files, create new blank file with the same name, right-click>Team>Show Local History>Get Contents
+
+Issue: Annoying thing - remove block comment doesn't remove intermediate * per line
+Solution: Use // instead of block comment /**/
+
+Issue: Compile error for xml files:
+s4s-elt-character: Non-whitespace characters
+are not allowed in schema elements other than 'xs:appinfo' and
+'xs:documentation' in xml
+Solution: Window>Preferences>General>Network Connections>Cache>Remove all cache entries
+Project>Clean all
+Source: https://bugs.eclipse.org/bugs/show_bug.cgi?id=152355
+
+Issue: To add a new plugin
+Solution: Help>Install New Software>Add Site. Enter name(arbitrary) and location of plugin's Update Site
+Source: http://agile.csc.ncsu.edu/SEMaterials/tutorials/install_plugin/index_v35.html
+
+Issue: When starting server, error message: 
+"Server JBoss v5.0 at localhost was unable to start within 50 seconds. If the server requires more time, try increasing the timeout in the server editor."
+Solution: Double-click server entry in Servers tab. Click Timeouts section to expand. Increase time
+Solution: Port was changed and eclipse not aware
+http://stackoverflow.com/questions/298312/starting-jboss-from-eclipse
+
+
+
+
+
+
+
+M2Eclipse:
+Warning in console after opening eclipse.
+Eclipse is running in a JRE, but a JDK is required
+Some Maven plugins may not work when importing projects or updating source folders.
+Solution: Add this to eclipse.ini 
+-vm 
+C:\Java\jdk6u14\bin
+It has to be on two separate lines for it to work.
+Also, these lines has to be before -vmargs
+Source: http://www.coderanch.com/t/488574/vc/Eclipse-running-JRE-but-JDK
+
+A Java Project can be Mavenized just by adding a pom.xml, right click on Project>Maven>Enable Dependency Management. Src folders will need to be added manually
+Dependencies specified in the pom.xml will then be added under Maven dependencies as jars
+This will be enough for projects not needing to run mvn install
+
+Maven dependencies in the package explorer are not sorted, so it is hard to find jars.
+You can go to Dependency Hierarchy tab in pom viewer, the right panel has the list sorted.
+
+By default, the maven installation will rely on C:\Documents and Settings\<user>\.m2\settings.xml
+for proxy settings. This will not be available and so if a proxy server is needed, build will fail.
+To fix, copy settings.xml from C:\Java\apache-maven-2.2.1\conf and specify proxy server
+
+To run mvn install in M2Eclipse, right-click on pom.xml or project>Run as>mvn install
+
+When running build in Eclipse, you get
+[INFO] Cannot copy a directory: D:\Sandbox\openejb\openejb-jar\target\classes; Did you package/install active 
+project artifact:
+ artifact = active project artifact:
+ artifact = org.kristoffer:openejb-jar:ejb:0.0.1-SNAPSHOT:compile;
+ project: MavenProject: org.kristoffer:openejb-jar:0.0.1-SNAPSHOT @ D:\Sandbox\openejb\openejb-jar\pom.xml;
+ project: MavenProject: org.kristoffer:openejb-jar:0.0.1-SNAPSHOT @ D:\Sandbox\openejb\openejb-jar\pom.xml?
+Reason: http://www.innovationontherun.com/common-issues-and-workarounds-while-building-ear-files-in-eclipse/
+A bug on the Resolve workspace artifacts. Just removing it will solve the problem.
+2 ways:
+1. Whenever you run a lifecycle phase (install, compile, etc), uncheck Resolve workspace artifacts in 
+configurations, as in the url above
+2. Easiest way, for each project, right click on Maven, then Disable Workspace resolution.
+
+Eclipse project lose empty src folders after update.
+Cause: There was an SVN conflict. 
+Solution: Resolve conflict then refresh project.
+You may have to restart eclipse
+If compile errors are still there, try refreshing.
+
+What's a good reference for M2Eclipse?
+http://www.sonatype.com/books/m2eclipse-book/reference/
+
+1. When we update to head the parent pom, does it cascade down? Yes
+2. When we refresh the parent pom, does it refresh all? No."
+
+To convert Java project to Maven project
+right click on project > configure > convert to Maven project
+
+To update Maven project's libraries after changing pom.xml
+right click on project > Maven > Update Dependencies
+
+Eclipse Maven Update issue:
+http://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art032
+http://stackoverflow.com/questions/14149545/java-security-cert-certificateexception-certificates-does-not-conform-to-algori
+1. In chrome, open https://repo.maven.apache.org/ 
+click flag > details > view certificate > details > copy to file > save as c:\temp\maven.cer
+2. In cmd
+\work\jdk1.8.0_101\bin\keytool -importcert -file C:\temp\maven.cer -keystore C:\Work\jre8\lib\security\cacerts
+3. Update C:\Work\jre8\lib\security\java.security
+remove MD5 and DH from disabled properties
+jdk.certpath.disabledAlgorithms=MD2, RSA keySize < 1024
+jdk.tls.disabledAlgorithms=SSLv3, RC4, keySize < 768
+4. If it still fails in eclipse, run mvn install in cmd.
+it should download files into repository.

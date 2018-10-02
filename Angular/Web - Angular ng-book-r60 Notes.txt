@@ -1,0 +1,526 @@
+//ng-book-r60 Notes
+
+FIRST ANGULAR APP
+
+Tools needed for angular:
+Nodejs, which includes npm.
+use npm (node package manager) to install typescript and @angular/cli (command line interface)
+use @angular/cli to create app
+use typescript as language to write app
+use ng (next generation) to run server and build
+
+Commands:
+To create new app (using @angular/cli):
+ng new my-new-app
+
+To create new component:
+ng generate component my-component
+
+To install app packages:
+npm install
+
+To run app:
+npm start or ng serve
+
+To deploy app:
+ng build --target=production --base-href '/'
+
+What are the main files for bootstrapping:
+package.json - libraries to install, used to generate node_modules folder
+.angular-cli.json - points to entry point, main.ts
+main.ts - bootstaps app by pointing to Module
+AppModule.ts - bootstraps top level component
+
+What module looks like:
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+What component looks like:
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+}
+
+How does it relate to MVC:
+app.component.model.ts - model 
+app.component.html - view
+AppComponent.ts - controller
+
+
+
+
+TYPESCRIPT
+
+Built-in Types:
+string, number, boolean, date
+array, enum, any, void
+
+Enum:
+enum Role {Employee, Manager}
+role:Role = Role.Employee;
+
+Classes has:
+Properties, Methods, Constructor 
+Classes support:
+Inheritance
+
+Nomenclature:
+Decorator @
+Annotates class
+e.g. @Component({}), @Input()
+
+Template Tags {{}}
+Template binding component variables to html, Surround expression
+e.g. Hello {{name}}
+
+Resolve #
+Binds html element to an object
+e.g. <input #title>
+
+Backticks ``
+Allows one expression across multiple lines
+Allows string interpolation ${var}, use \ to escape literal $ character
+e.g.`Hello ${name}`
+
+Fat Arrow:
+(param1, param2) => { some expr using param1; }
+is a shorthand for
+function myFunction(param1, param2) { some expr using param1; }
+
+note: if there is only one param, () is optional.
+param1 => { some expr using param1; }
+
+param1 => expression;
+means return expression
+
+this is available, no need to use self.
+
+
+
+
+HOW ANGULAR WORKS
+
+Input
+[inputName] = "fieldName"
+Output
+(outputName) = "methodName($event)"
+
+EventEmitter
+@Component({
+ selector:'child',
+ template:`<li *ngFor="let product of productList"> <button (click)="buttonClicked(product)">Click Me!</button> </li>`
+})
+export class ChildComponent{
+ @Input() productList: Product[];
+ @Output() onProductSelected: EventEmitter<Product>;
+ constructor(){
+   this.onProductSelected = new EventEmitter<Product>();
+ }
+ buttonClicked(){
+  return this.onProductSelected.emit(product);
+ }
+}
+
+@Component({
+ selector:'parent'
+ template:`<child onProductSelected="productSelected($event)"></child>`
+})
+export class ParentComponent{
+  productSelected(Product product){
+	console.log(product + " was selected");
+  }
+}
+
+
+
+
+BUILT-IN DIRECTIVES
+NgIf, NgSwitch, NgStyle, NgClass, NgFor, NgNonBindable
+
+NgIf
+<div *ngIf="enabled"></div>
+
+NgSwitch
+<div *ngSwitch="choice == 'A'">choice was a</div>
+<div *ngSwitch="choice == 'B'">choice was b</div>
+<div *ngSwitch="choice == 'A'">choice was a, note this can be repeated</div>
+<div *ngSwitchDefault>choice was neither a,b, note this is optional</div>
+
+NgStyle
+//in class:
+bg-color:string = white;
+//in template:
+<div *ngStyle="{color: 'blue', 'background-color': bg-color}"></div>
+
+NgClass
+//in class:
+myClass:string[] = ['blue','round'];
+//in template:
+<div *ngClass="myClass"></div>
+
+NgFor
+<li *ngFor="let name of names;let i = index">{{i+1}} - {{name}}</li>
+
+NgNonBindable
+<div *ngNonBindable>literal {{something}}</div>
+
+
+
+
+
+FORMS IN ANGULAR
+
+2 classes for controlling form objects:
+FormControl - represents input field
+FormGroup - collection of FormControl 
+
+2 Types of Form Usage:
+FormsModule - implicit creation of formControls
+	ngForm, ngModel
+ReactiveFormsModule - explicit creation of formControls, more control
+	formGroup, formControl
+
+FormsModule	
+//html	
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
+	<input name="sku" ngModel />
+</form>	
+//class
+onSubmit(formObject){
+  console.log(formObject);
+}	
+	
+ReactiveFormsModule
+//html
+<form [formGroup]="fg" (ngSubmit)="onSubmit(fg.value)">
+	<input [formControl]="fg.controls['sku']"/> 
+</form>
+//class	
+export class MyComponent{
+ fg:FormGroup;
+ constructor(fb:FormBuilder){
+  this.fg = fb.group({sku: ['ABC123']}); 
+ }
+ onSubmit(formControl){
+  console.log(formControl);
+ }	
+}
+
+
+Validation:
+How to declare validator for formControl:
+ this.myForm = fb.group({
+  'sku':  ['', Validators.required]
+ });
+
+formGroup/formControl properties:
+	touched/untouched, dirty/pristine, valid/invalid
+e.g. fg.controls['sku'].valid
+
+formGroup/formControl methods:
+	hasError()
+e.g. fg.controls['sku'].hasError('required');
+
+Custom Validations:
+ function customSkuValidation(fc FormControl): {[s:string], boolean}{
+	if (!fc.value.match(^123)) return {invalidSku, true};
+ }
+ constructor(){
+  this.myForm = fb.group({
+   'sku':  ['', Validators.compose([Validators.required, customSkuValidation])]
+  });
+ }
+ 
+Watching For Changes:
+formGroup and formControl both have EventEmitter via valueChanges property
+e.g.
+	this.sku.valueChanges.subscribe(
+	  (value: string) => { console.log('sku changed to:', value); }
+	);
+
+	this.myForm.valueChanges.subscribe(
+	  (form: any) => { console.log('form changed to:', form); }
+	);
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+DEPENDENCY INJECTION
+Dependency Injection better than creating instances via constructor.
+
+Steps:
+1. Create the dependency
+2. Configure the injection by registering class as provider in NgModule
+3. Inject the dependency as a param in constructor of calling class.
+
+Types of DI:
+a. Singleton
+providers : [MyService]
+same as
+providers : [{provide:MyService, useClass:MyService}]
+b. strings or objects (decorate constructor param with @Inject('dependency-name')
+providers : [{provide:'urlString', useValue:'http://www.google.com'}]
+constructor(@Inject("urlString") urlString:string){}
+c. Factory (useFactory(param){return implementation;})
+providers : [{provide:MyServiceInf, useFactory(){} }]
+
+
+
+
+
+
+
+HTTP
+3 ways to use http:
+a. Callbacks
+b. Promises
+c. Observable //preferred way
+
+To use Http:
+a. import HttpClient Module in NgModule
+b. add HttpClient dependency via constructor
+c. use member variable http
+this.http.request(url); //returns Observable
+
+this.http.request(url).subscribe(
+  (res:Response) =>{
+    this.data = res.json();
+  }	
+);
+
+request method is generic, specific methods are:
+get(url)
+delete(url);
+head(url);
+post(url, json.stringify(body);
+put(url, json.stringify(body);
+patch(url, json.stringify(body);
+
+
+
+
+
+
+ROUTING
+3 components:
+a. Routes: an array of mapping objects of path mapping to component.
+b. RouterModule.forRoot(routes): import RouterModule and specify routes.
+{ provide: LocationStrategy, useClass: HashLocationStrategy }
+c. <a [routerLink]="['home']"> Home: use <a> tag to add link that goes to a particular route.
+<router-outlet></router-outlet>: specify in html where the route components will show up.
+
+2 Routing Strategies:
+a. PathLocationStrategy - default, using HTML5 routing
+b. HashLocationStrategy - use for older servers/browsers
+
+Route Parameters
+a. define path
+routes: /route/:id
+b. subscribe to extract param
+constructor(ar:ActivatedRoute){
+  ar.params.subscribe(params => {this.id=params['id']});
+}
+
+Router Hooks
+//Route Guard
+export class LoggedInGuard implements CanActivate {
+  constructor(private authService: AuthService) {}
+  
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+      const isLoggedIn = this.authService.isLoggedIn();
+      console.log('canActivate', isLoggedIn);
+      return isLoggedIn;
+  }
+}
+
+//NgModule
+  const routes: Routes = [
+  {
+    path: 'protected',
+    component: ProtectedComponent,
+    canActivate: [ LoggedInGuard ]
+  }
+  ]
+  ...
+  providers: [AuthService, LoggedInGuard],
+
+Nested Routes
+  childRoutes: Routes =[
+    { path: '', redirectTo: 'main', pathMatch: 'full' },
+    { path: 'main', component: MainComponent },
+    { path: 'more-info', component: MoreInfoComponent },
+    { path: ':id', component: ProductComponent },
+  ]
+  
+  routes:Routes = [
+    {
+      path: 'products',
+      component: ProductsComponent,
+      children: childRoutes
+    }
+  ]
+  
+<div>
+  <a [routerLink]="['./main']">Main</a> |
+  <a [routerLink]="['./more-info']">More Info</a> |
+  <button (click)="goToProduct(id.value)">Go</button>
+</div>
+
+  goToProduct(id: string): void {
+    this.router.navigate(['./', id], {relativeTo: this.route});
+  } 
+  
+to navigate from parent to child:
+<a [routerLink]="['/products','more-info']">More Info</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADVANCED
+
+Styles
+2 Style Types:
+internal: styles 
+external: styleUrls
+
+3 Types of Style Encapsulation:
+a. encapsulation: ViewEncapsulation.Emulated - default
+b. encapsulation: ViewEncapsulation.Native - uses shadow DOM, styles outside the css tree
+c. encapsulation: ViewEncapsulation.None - lets styles leak out
+
+
+Directives
+@Directive({
+  selector: '[popup]',
+  exportAs: 'popup'
+})
+export class PopupDirective {
+  @Input() message: String;
+  constructor(private _elementRef: ElementRef) {
+    console.log(_elementRef);
+  }
+  @HostListener('click') displayMessage(): void {
+    alert(this.message);
+  }
+}
+<div class="ui message" popup #popup1="popup" message="Clicked the message">
+<button (click)="popup1.displayMessage()" class="ui button">Display popup for message element</button>
+
+
+Content projection
+expand a directive into a bigger template
+<div message header="My Message">This is the content of the message</div>
+to
+<div class="ui message">
+  <div class="header">My Message</div>
+  <p>This is the content of the message</p>
+</div>  
+
+@Component({
+  selector: '[app-message]',
+  template: `
+    <div class="header">{{ header }}</div>
+    <p><ng-content></ng-content></p>
+  `
+})
+export class MessageComponent implements OnInit {
+  @Input() header: string;
+  @HostBinding('attr.class') cssClass = 'ui message';
+  ngOnInit(): void {
+    console.log('header', this.header);
+  }
+}
+
+
+Querying Neighbor Directives
+export class ContentTabsetComponent implements AfterContentInit {
+  @ContentChildren(ContentTabComponent) tabs: QueryList<ContentTabComponent>;
+  ...
+  setActive(tab: ContentTabComponent): void {
+    this.tabs.toArray().forEach((t) => t.active = false);
+    tab.active = true;
+  }
+}  
+
+
+Lifecycle Hooks
+8 hooks:
+a. OnInit
+b. OnDestroy
+c. DoCheck - summary, not per keyEvent
+d. OnChanges - per KeyEvent
+e. AfterContentInit
+f. AfterContentChecked
+g. AfterViewInit
+h. AfterViewChecked
+
+
+Advanced Templates
+@Directive({
+  selector: '[ngBookIf]'
+})
+export class NgBookIfDirective {
+  constructor(private viewContainer: ViewContainerRef,
+              private template: TemplateRef<any>) {}
+
+  @Input() set ngBookIf(condition) {
+    if (condition) {
+      this.viewContainer.createEmbeddedView(this.template);
+    } else {
+      this.viewContainer.clear();
+    }
+  }
+}
+<div *ngBookIf="display">The message is displayed</div>
+
+
+Change Detection
+changeDetection: ChangeDetectionStrategy.OnPush
+constructor(private changeDetector: ChangeDetectorRef) {}
+if (this.counter % 5 === 0) {
+  this.changeDetector.markForCheck();
+}  
+
+
+
+
+
+
+
+
+
+TESTING
+End to end testing vs unit tests
+Jasmine - bdd framework
+Karma - headless browser

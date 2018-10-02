@@ -1,0 +1,63 @@
+1. No entities being created in seam generate
+the property in build.properties(populated in interview) named
+hibernate.default_schema has a wrong value.
+For H2, this should be left blank, or PUBLIC.
+
+2. Error when running ant explode in seam folder.
+ant's default goal is deploy, and it deploys file project.ear
+ant explode goal will deploy a folder named project.ear
+When ant deploy is called first, then ant explode, 
+there will be an error since in windows, a folder cannot have the same name as a file.
+
+3. When seam generate is ran, the folder is not deployed in jboss server,
+but a similar directory structure is created inside the seam folder.
+Solution: <seam-dir>/build.properties needs to be changed like so
+jboss.home=c\:/java/jboss-5.1.0.GA
+Take note that the separator is / and not \.
+If you prefer to use \, escape like so \\.
+
+4. Endless redeployment loop 
+http://seamframework.org/Documentation/WhatHappensWhenYouDeploySeamAppInJBoss5 
+JBoss 5.1 has a known redeployment issue when deploying applications via Eclipse. 
+This causes an application to be in a continuous redeployment loop.
+Solution:Delete the temp file that gets created by the IDE each time the application is deployed to the server via IDE : 
+         \jboss\server\default\deploy\<application>.ear\<application>.war\WEB-INF\.pages.xml.spdia
+Note : This won’t occur If the application is deployed via “seam-gen”.
+
+5. jdbc driver not found in jboss startup
+seam generate copies the jar to jboss/server/default/lib
+However, if you switch and don't rerun generate,
+you have copy the file manually.
+Hsql driver is supported by default and is in jboss/common/lib
+
+6. How to add serialVersionUID in generated classes?
+http://code.google.com/p/seaminaction/wiki/SeamGenEnhancements
+Add Pojo.ftl to seam/seam-gen/pojo for the model classes as per link
+with the following contents:
+
+${pojo.getPackageDeclaration()}
+// Generated ${date} by Hibernate Tools ${version}
+<#assign classbody>
+<#include "PojoTypeDeclaration.ftl"/> {
+<#if !pojo.isInterface()>
+private static final long serialVersionUID = 1L;
+<#include "PojoFields.ftl"/>
+<#include "PojoConstructors.ftl"/>
+<#include "PojoPropertyAccessors.ftl"/>
+<#include "PojoToString.ftl"/>
+<#include "PojoEqualsHashcode.ftl"/>
+<#else>
+<#include "PojoInterfacePropertyAccessors.ftl"/>
+</#if>
+<#include "PojoExtraClassCode.ftl"/>
+}
+</#assign>
+${pojo.generateImports()}
+${classbody}
+
+
+For the action classes,
+seam/seam-gen/src/EntityHome.java.ftl and seam/seam-gen/src/EntityList.java.ftl
+insert after the class declaration the following line:
+
+private static final long serialVersionUID = 1L;

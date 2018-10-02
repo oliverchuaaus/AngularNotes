@@ -1,0 +1,23 @@
+Gradle no dependencies in Eclipse
+https://stackoverflow.com/questions/38171471/eclipse-not-recognizing-gradle-dependencies
+
+Add apply plugin: "eclipse" to build.gradle
+Run gradlew cleanEclipse eclipse in cli.
+Refresh eclipse
+
+
+build use cases:
+1. Install Gradle
+	https://gradle.org/install/
+	download zip, unzip locally
+	add path entry: C:\Gradle\gradle-4.1\bin
+
+1. setup new project from scratch
+https://www.mkyong.com/gradle/gradle-create-java-project-structure-automatically/
+gradle init --type java-library
+
+2. dependencies
+	import dependencies
+	specify external repositories
+3. generate war file
+4. run plugins for 	

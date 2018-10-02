@@ -1,0 +1,2 @@
+Display params of sql
+http://www.mkyong.com/hibernate/how-to-display-hibernate-sql-parameter-values-log4j/

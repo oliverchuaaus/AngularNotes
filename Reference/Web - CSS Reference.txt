@@ -1,0 +1,298 @@
+http://www.w3schools.com/css
+
+
+Cascading Style Sheets
+
+CSS Syntax:
+a. Selector, can be multiple
+b. Declaration Block
+e.g.
+h1,p {color:blue; font-size:12px;}
+
+Kinds of Selector
+a. element	h1
+b. id		#para1
+c. class	.subtitles
+h1.center = only h1 tags with class=center affected
+<tag class="center title"></tag>
+multiple classes =both styles apply. precedence is based on declaration of styles, not in the list of styles in the tag 
+
+Grouping Selectors - help avoid duplication
+h1, h2, p {color:red}
+
+/*singe-line comment*/
+/*
+multi-line
+comments
+*/
+
+
+3 Ways to insert CSS
+a. external stylesheet
+	<link rel="stylesheet" type="text/css" href="mystyle.css">
+b. internal stylesheet
+	<head>
+	  <style>
+	  body {
+	    background-color: white;
+	  }
+	  h1 {
+	    color: maroon;
+	    margin-left: 40px;
+ 	  } 
+  	  </style>
+	</head>
+c. inline style
+	<h1 style="color:blue;">This is a heading.</h1>
+	
+Cascade will be from external to internal to inline
+so inline overrides the declaration of any same selector.
+Make sure external declared before internal for this to work.
+
+
+BACKGROUND
+background-color	
+	hex 	#ff0000;
+	rgb 	rgb(255,0,0);
+	color	red;
+background-image
+	url("paper.gif");
+background-repeat
+	repeat-x;	to repeat along x only, not y
+	no-repeat;
+background-attachment
+	fixed		will not scroll
+background-position
+	right top;
+background
+	#ffffff url("img_tree.png") no-repeat right top;
+	
+	
+	
+BOX MODEL
+4 Parts of the Box Model:
+a. Margin
+b. Border
+c. Padding
+d. Content
+
+top, right, bottom, left - mnemonic is clockwise starting at 12oclock
+1 value : all sides
+2 values: top, bottom, right, left
+3 values: top, right and left, bottom
+4 values: top, right, bottom, left
+
+Margin collapse, top and bottom only, the lesser margin will be collapsed.
+
+DIMENSION
+height
+min-height
+max-height 
+width
+min-width
+max-width
+
+The only problem occurs when the browser window is narrower than the width of your element. The browser resolves this by creating a horizontal scrollbar on the page. Let's improve the situation...
+div extends to whole width. 
+use max-width=50% and margin:auto to limit size and center component
+
+	
+	
+TEXT
+color
+text-align
+	left;
+	right; 
+	justify;
+	center;
+text-decoration
+	overline;
+	line-through;
+	underline;
+text-transform
+	uppercase;
+	lowercase;
+	capitalize;
+text-indent
+	50px;
+
+
+FONT
+font-style
+	italic;
+	oblique;
+font-variant
+	small-caps
+font-weight
+	100..900
+font-size/line height
+	40px
+	2.5 em (40px/16)	will adjust size based on browser setting
+	50%	50% of body size
+font-family
+	generic
+		Serif
+		Sans-Serif
+		Monospace
+	font family
+		"Times New Roman"
+		Arial
+		Courier
+	e.g. "Times New Roman", Serif;	
+font
+	italic bold 12px/30px Georgia, serif;
+
+LINKS
+4 link states
+mnemonic: lvha
+a:link
+a:visited
+a:hover
+a:active
+a:hover MUST come after a:link and a:visited
+a:active MUST come after a:hover
+for it to work.
+text-decoration
+background-color
+
+
+LISTS
+list-style-type
+	circle;
+	square;
+	upper-roman;
+	lower-alpha;
+list-style-position
+	inside
+	outside	
+list-style-image
+	url("square.gif");
+list-style	
+	square inside url("sqpurple.gif");
+	
+	
+TABLE
+border
+	1px solid black;
+border-collapse
+	collapse;
+width
+height
+text-align
+vertical-align
+padding
+
+
+
+
+
+
+DISPLAY/VISIBILITY
+display
+	none		collapses space
+	inline		puts elements in the same line e.g. p {display:inline}
+	block		separate line e.g. span {display:block}
+
+visibility
+	hidden		takes up space
+	collapse	collapses space
+	
+POSITIONING
+4 Positioning Methods:
+a. Static	default positioning, top, bottom, left right properties will not work unless position is any of the three below
+b. Fixed	relative to browser window, removed from normal flow	
+c. Absolute	relative to first parent that has a position other than static, removed from normal flow
+d. Relative	relative to its position, preserved in normal flow, usually used as container blocks for absolute position blocks
+e. Sticky	relative then fixed when scrolled
+
+OVERFLOW
+z-index	higher values goes on top, if not specified, last declared goes on top
+overflow
+	visible	default, will show element outside border
+	hidden	
+	scroll
+	auto
+	
+	
+FLOAT
+float
+	right
+	left
+clear
+	right
+	left - clear float:left previous sibling so this starts on a new line
+	both
+.clearfix
+	auto - if floating image is taller than container, it will overflow. use this to increase container size to size of image.
+.clearfix::after{
+	content:"";
+	clear:both;
+	display:table;
+} - newer that handles scrollbars better
+	
+ALIGN
+display:inline-block - for components arranged in rows.
+margin-left
+	auto	split margin equally
+margin-right
+	auto
+Tips:	
+When aligning elements with position, always define margin and padding for the <body> element. This is to avoid visual differences in different browsers.
+There is also a problem with IE8 and earlier, when using position. If a container element (in our case <div class="container">) has a specified width, and the !DOCTYPE declaration is missing, IE8 and earlier versions will add a 17px margin on the right side. This seems to be space reserved for a scrollbar. So, always set the !DOCTYPE declaration when using position:	
+	
+
+COMBINATOR
+4 types of combinators
+a. Descendant Selector	e.g. div p	p nested inside div
+b. Child Selector	e.g. div > p	p immediately inside div
+c. Adjacent Sibling	e.g. div + p	first p outside div
+d. General Sibling	e.g. div ~ p	subsequent ps outside div
+
+
+PSEUDO
+Pseudo-class (:)
+a:link (visited,hover,active)
+
+Can use class to limit style to those with class only
+a.hilite:hover{
+  color:red;
+}
+<a class="hilite">
+
+p:first-child
+q:lang(no){
+	quotes: "~" "~";
+}
+<q lang="no">A quote in a paragraph</q>
+
+For striped tables:
+p:nth-child(odd) {
+    background: red;
+}
+p:nth-child(even) {
+    background: blue;
+}
+
+Pseudo-elements (::)
+p::first-letter
+p::after
+p::before	insert something before element
+	p::before {
+    content: url(smiley.gif);
+	}
+
+
+
+
+ATTR SELECTORS
+a[target] {
+    background-color: yellow;
+} - only a elements with target attribute will get style
+<a href="a" target="b">
+a[target="_blank"]
+[title="flower"]  - title attribute containing exactly flower e.g. flower
+[title~="flower"] - title attribute containing exactly flower in the list e.g. title="flower plant"
+[title*="flower"] - title attribute ending with word flower, can be partial e.g. flowerpower
+[title|="flower"] - title attribute starting with word flower e.g. flower-plant
+[title^="flower"] - title attribute starting with flower e.g. flower-plant, flowerpower
+[title$="flower"] - title attribute ending with word flower

@@ -1,0 +1,52 @@
+to learn:
+Spring Security, JWT?
+Angular 0Auth
+Angular test: jasmine, karma, e2e?
+Less/SCSS/SASS
+mongodb queries
+Docker for restful service
+
+Backend
+Spring Boot
+Gradle
+Spring Security
+Hamcrest - third gen unit test framework
+
+Hibernate api for audit
+
+
+css:
+layout
+mobile first
+responsive design
+bootstrap
+less, sass, scss
+closure compiler
+
+angular for mobile: ionic or nativescript
+
+
+done:
+AWS S3 EC2 Beanstalk
+gradle
+spring boot
+
+next time:
+Azure
+Google Cloud
+Angular mobile
+captcha
+
+Security:
+a. 3 failed attempts lock account
+b. email integration
+c. remember me checkbox
+d. OAuth
+e. captcha
+f. forgot password
+g. reset password
+
+
+
+http://ng2-sample.s3-website-ap-southeast-2.amazonaws.com
+http://springbooteb1-env.uzwrqpk4m9.ap-southeast-2.elasticbeanstalk.com/people/1

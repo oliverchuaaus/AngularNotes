@@ -1,0 +1,127 @@
+Difference between Comparable and Comparable	
+
+Comparable int compare(Object o)
+Comparator int compareTo(Object o1, Object o2)
+boolean equals(Object o)
+
+2 methods that need to be implemented if an object is to be used as key in Map	
+
+boolean equals(Object o) 
+int hashCode() 	- same object should consistently return same number.
+		- different object can return same number but will make hashmap slow.
+
+Types of inner class
+a. static inner class
+b. member inner class
+c. method inner class
+d. anonymous inner class
+
+How to create and run Threads
+
+
+Java 5 2004
+Generics - <>
+Annotations - @Override, @Test
+Autoboxing
+Enumerations
+Varargs (String... messages)
+foreach loop ( for () )
+static imports	import static java.lang.Math.PI;
+
+
+Generics
+Generic Types - e.g. List, classes containing objects
+Raw Types - List<E>, the E inside List representing a generic Object
+Parameterized Types - List<String>, instance of a generic type with the class.
+Bounded Parameter - <E extends Number>
+Wildcards - <?>
+Upper Bounded Wildcard - <? extends Number>
+Lower Bounded Wildcard - <? super Integer>
+Type Erasure - during compile time, unbounded types are replaced with Object, bounded types are replaced with the Type.
+
+
+Java 6 2006
+JAX-WS
+ 
+ 
+ 
+Java 7 2011
+binary literals
+0b00101000
+
+string in switch
+switch(str){
+  case "Monday": day="Lunes";
+  case "Tuesday": day="Martes";
+}
+
+JDBC 4.1 try with resource statement
+try (Statement stmt = con.createStatement()) {}
+stmt will be closed after try block
+
+Catch multiple exceptions
+FROM
+catch (FirstException fe){
+    logger.log(ex);
+    throw ex;
+}
+catch (SecondException se){
+    logger.log(ex);
+    throw ex;
+}
+TO
+catch (FirstException|SecondException fse){
+    logger.log(ex);
+    throw ex;
+}
+
+Type Inference for Generic Instance Creation
+FROM
+Map<String, List<String>> myMap = new HashMap<String, List<String>>();
+TO
+Map<String, List<String>> myMap = new HashMap<>();
+
+
+
+
+Java 8 2014
+Lambda functions - write single function anonymous class more compactly
+
+printPersons(
+	roster,
+	(Person p) -> ((p.getAge() >= 18) && (p.getAge() <= 25)),
+	p -> p.getEmailAddress(),
+	email -> System.out.println(email)
+   );
+
+public void printPersons(
+	final List<Person> roster, 
+	final Predicate<Person> predicate,
+    	final Function<Person, String> function, 
+    	final Consumer<String> consumer){
+  for (final Person p : roster)
+  {
+    if (predicate.test(p))
+    {
+	final String data = function.apply(p);
+	consumer.accept(data);
+    }
+  }
+}
+
+Allows multiple inheritance
+Allows interface to have default methods
+
+
+Recursion:
+binary tree - add nodex
+
+int recurse(Node node){
+	if (node==null){
+	   return 0;
+	}
+	return recurse (node.left)+ recurse(node.right);
+}
+
+
+

@@ -1,0 +1,316 @@
+Spring
+
+Short Answers:
+Java Based Config
+@Configuration
+@ComponentScan
+@EnableScheduling
+@EnableTransactionManagement
+@EnableWebMvc
+@Bean
+@Scope("prototype")
+
+Autowiring
+By name
+By type
+By qualifier
+
+@Autowired 	tqn
+@Inject		tqn
+@Resource 	ntq
+
+@Controller
+@Service
+@Repository
+
+DB
+a. create datasource
+b. create EMFactory using ds
+c. create TM using EMF
+d. persistence.xml
+
+7 propagation attr
+PROGRPATION_REQUIRED
+
+a. PROPAGATION_MANDATORY		use				throw
+b. PROPAGATION_NESTED			suspend, create	create
+c. PROPAGATION_NEVER			throw			nothing
+d. PROPAGATION_NOT_SUPPORTED	suspend			nothing
+e. PROPAGATION_REQUIRED 		use				create		DEFAULT
+f. PROPAGATION_REQUIRES_NEW		create			create
+g. PROPAGATION_SUPPORTS			use				nothing
+
+3 Isolation Issues
+a. dirty reads 		txnA can read txnB uncommitted changes
+b. non-repeatable reads	txnA read is different to txnB read due to txnB's changes
+c. phantom reads	txnA read is more or less due to txnB adding or deleting records
+
+5 Isolation Levels
+a. ISOLATION_DEFAULT		
+b. ISOLATION_READ_UNCOMMITTED	all three issues possible
+c. ISOLATION_READ_COMMITTED	dirty read prevented
+d. ISOLATION_REPEATABLE_READ	dirty read and non-repeatable reads prevented
+e. ISOLATION_SERIALIZABLE	all three issues prevented
+
+JMS
+How to setup listener?
+a. create connectionFactory
+b. create jmsContainer using connectionFactory, point to listener class and method
+c. create listener class
+
+How to setup sender?
+a. create connectionFactory
+b. create jmsTemplate using connectionFactory
+c. call send method, create anon inner class CreateMessage that returns Message object
+d. return Message object created from Session
+
+How to setup topic?
+a. jmsContainer.setPubSubDomain(true);
+How to make subbscription durable?
+a. jmsContainer.setSubscriptionDurable(true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Java based Config
+5 annotations for Config
+@Configuration
+@ComponentScan("com.sun")
+@EnableScheduling //cron
+@EnableTransactionManagement //transactional
+@EnableWebMvc //webapp
+public class AppConfig
+  
+Annotation for Bean:
+@Bean
+public MyBean bean(){
+  return new MyBeanImpl();
+}
+
+Annotation for Prototype scope:
+@Bean
+@Scope("prototype")
+public MyBean beanPrototype(){
+  return new MyBeanImpl();
+}
+
+
+
+
+
+
+
+Autowiring
+3 ways autowire resolve DI
+By Name
+By Type
+By Qualifier
+
+3 autowire annotations
+@Autowired
+@Inject
+@Resource
+
+How autowire annotation resolve DI?
+@Autowired (spring) and @Inject(java) 
+match by type, restrict by qualifier, match by name
+@Resource(java) 
+match by name, match by type, restrict by qualifier
+
+3 Bean Annotations
+@Controller //controller
+@Service //service
+@Repository //dao
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Database
+dataSource()
+  entityManagerFactory()
+    transactionManager()
+    
+How to setup db?
+a. create datasource with connection details
+b. create EMFactory using datasource
+c. create transactionManager using EMFactory
+d. setup persistence.xml
+
+private DataSource dataSource() {
+	String datasource = this.propertiesMap.getProperty(AppConfig.DATASOURCE);
+	try {
+		OracleDataSource dataSource = new OracleDataSource();
+		// Use DatabaseName for SID, use ServiceName for Service
+		dataSource.setServiceName(this.propertiesMap.getProperty("datasource.dbname"));
+		dataSource.setUser(this.propertiesMap.getProperty("datasource.user"));
+		dataSource.setPassword(this.propertiesMap.getProperty("datasource.password"));
+		dataSource.setServerName(this.propertiesMap.getProperty("datasource.servername"));
+		dataSource.setPortNumber(Integer.parseInt(this.propertiesMap.getProperty("datasource.port")));
+		dataSource.setDriverType("thin");
+		return dataSource;
+	} catch (Exception e) {
+		return null;
+	}
+}
+
+EntityManagerFactory entityManagerFactory() {
+	if (AppConfig.factory == null) {
+		Map<String, DataSource> properties = new HashMap<>();
+		properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, this.dataSource());
+		AppConfig.factory = Persistence.createEntityManagerFactory(AppConfig.PERSISTENCE_UNIT_NAME, properties);
+	}
+	return AppConfig.factory;
+}
+
+JpaTransactionManager transactionManager() throws ClassNotFoundException {
+	JpaTransactionManager transactionManager = new JpaTransactionManager();
+	transactionManager.setEntityManagerFactory(this.entityManagerFactory());
+	transactionManager.setJpaDialect(this.eclipseLinkJpaDialect());
+	transactionManager.setRollbackOnCommitFailure(true);
+	return transactionManager;
+}
+
+
+
+
+
+
+a. PROPAGATION_MANDATORY		use				throw
+b. PROPAGATION_NESTED			suspend, create	create
+c. PROPAGATION_NEVER			throw			nothing
+d. PROPAGATION_NOT_SUPPORTED	suspend			nothing
+e. PROPAGATION_REQUIRED 		use				create		DEFAULT
+f. PROPAGATION_REQUIRES_NEW		create			create
+g. PROPAGATION_SUPPORTS			use				nothing
+
+
+
+
+
+
+3 Isolation Issues
+a. Dirty Reads		txnA can read txnB's uncommitted changes
+b. Nonrepeatable Reads	txnA query resultA is different to resultB, due to txnB updating the record
+c. Phantom Reads	txnA query resultA is different to resultB, due to txnB adding one or more records
+
+5 Isolation Levels
+a. ISOLATION_DEFAULT		Default
+b. ISOLATION_READ_UNCOMMITTED	all three issues possible
+c. ISOLATION_READ_COMMITTED	Dirty Reads prevented
+d. ISOLATION_REPEATABLE_READ	Dirty Reads, Nonrepeatable Reads prevented
+e. ISOLATION_SERIALIZABLE	All three issues prevented
+
+
+
+
+
+
+
+
+
+JMS
+jmsQueueConnectionFactory()
+  jmsContainer()
+  jmsTemplate()
+
+How to setup listener?
+a. create jmsQueueConnectionFactory
+b. create jmsContainer using factory, set queue name, set listener class and method name
+c. create listener class
+
+How to setup sender?
+a. create jmsQueueConnectionFactory
+b. create jmsTemplate
+c. call send method, creating anon inner class MessageCreator with createMessage interface
+d. return Message object(TextMessage subclass), created from Session 
+
+
+SAMPLE CODE:
+Listener
+public DefaultMessageListenerContainer jmsContainer() throws NumberFormatException, JMSException {
+	DefaultMessageListenerContainer jmsContainer = new DefaultMessageListenerContainer();
+	jmsContainer.setConnectionFactory(jmsQueueConnectionFactory());
+	jmsContainer.setDestinationName("queueName");
+	jmsContainer.setMessageListener(cdmQueueListenerAdapter());
+	return jmsContainer;
+}
+
+public MessageListenerAdapter cdmQueueListenerAdapter() {
+	MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter();
+	messageListenerAdapter.setDelegate(cdmQueueListener());
+	messageListenerAdapter.setDefaultListenerMethod("processMessage");
+	return messageListenerAdapter;
+}	
+
+public CDMQueueListener cdmQueueListener() {
+	return new CDMQueueListener();
+}
+
+public class CDMQueueListener {
+
+  public void processMessage(final String xmlMessage) {
+    log.debug("xmlMessage: " + xmlMessage);
+  }
+}
+	
+Sender
+@Bean
+JmsTemplate jmsTemplate() throws NumberFormatException, JMSException {
+	JmsTemplate jmsTemplate = new JmsTemplate(jmsQueueConnectionFactory());
+	jmsTemplate.setPubSubDomain(false);
+	return jmsTemplate;
+}
+
+jmsTemplate.send("PDI.SRV.CDMQ0001.REQ", new MessageCreator() {
+	@Override
+	public Message createMessage(Session session) throws JMSException {
+		File file = new File("src/test/resources/xmls/PI archive.xml");
+		String msg;
+		try {
+			msg = FileUtils.readFileToString(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new JMSException(e.getMessage());
+		}
+		TextMessage message = session.createTextMessage(msg);
+		return message;
+	}
+});
+
+
+

@@ -1,0 +1,79 @@
+//Methods
+services.factory("ClientConfigService", ["$resource", function($resource){
+	return $resource(baseUrl +"/prodinit/list", {}, {
+		getList : {
+			url : baseUrl + "/prodinit/list",
+			method : 'GET',
+			params : {client: '@client', job: '@job'},
+			isArray : true
+		},
+		getTicketByConfigId : {
+			url : baseUrl + "/prodinit/:id/ticket",
+			method : 'GET',
+			params : {id: '@id'}
+		},
+
+		createConfig : {
+			url : baseUrl + "/prodinit",
+			method : 'POST',
+			params : {validate: '@validate'}
+		},
+		updateConfig : {
+			url : baseUrl + "/prodinit",
+			method : 'PUT',
+			params : {validate: '@validate'}
+		},
+		deleteById : {
+			url : baseUrl + "/prodinit/:id",
+			method : 'DELETE',
+			params : {id: '@id'}
+		},
+	});
+}]);
+
+
+
+
+//Service vs. Factory vs. Provider
+
+//Service
+mainApp.service('CalcService', function(MathService){
+   this.square = function(a) { 
+      return MathService.multiply(a,a); 
+	}
+});
+
+CalcService.square(5);
+
+
+//Factory
+var mainApp = angular.module("mainApp", []);
+mainApp.factory('MathService', function() {     
+   var factory = {};  
+		
+   factory.multiply = function(a, b) {
+      return a * b 
+   }
+   return factory;
+});
+
+MathService.multiply(5);
+
+//Provider
+var mainApp = angular.module("mainApp", []);
+//create a service using provider which defines a method square to return square of a number.
+mainApp.config(function($provide) {
+   $provide.provider('MathService', function() {
+	
+      this.$get = function() {
+         var factory = {};  
+         factory.multiply = function(a, b) {
+            return a * b; 
+         }
+         return factory;
+      };
+		
+   });
+});
+
+MathService.multiply(5);

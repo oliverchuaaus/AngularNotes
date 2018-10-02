@@ -1,0 +1,80 @@
+Theory:
+a. Common:
+Check out branch
+Browse Repository
+Check In
+Update to Latest
+Revert changes
+Revert to before bad updates
+Switch to a different branch
+Resolve conflicts
+Show Log
+Compare files
+Check for modifications
+Add ignore files
+Blame
+b. Branch:
+Merge one branch to another
+Create branch
+Tagging
+c. Quality:
+Force users to enter a log message
+Force users' log message to follow certain format
+Email alert when certain files are changed
+Let users change log message
+d. Management:
+Setup account
+Change account password
+
+Best Practices:
+Topmost folders of a repository should be tags, branches and trunk
+Resources should not be in a separate folder from the main project. Otherwise, these have to be loaded separately outside Maven and can be forgotten. Copy as a folder inside the main project.
+
+Questions:
+a.
+How to lock SVN to prevent commits?
+When we are doing release preparation,
+we don't want intermittent commits because we want to lock a snapshot of the repository.
+We need to either tag or branch the repository.
+When we have a tag or branch, we can use this to retrieve the snapshot to create the release.
+
+However, sometimes, after tagging, there may be compile errors.
+when there are commits made after tagging, and we have to retag,
+these files will be included in the new tag, which we don't like.
+
+Therefore, there is a need to disable commits 
+starting from release preparation until release is done.
+Usually an email is sent to people so that nobody commits during this time.
+However, not every one checks their email, or email is delayed.
+
+There are several ways to do it.
+We can use locks. However, these only lock existing files.
+It doesn't lock folders, and users can still commit new files.
+Furthermore, locks can be broken.
+
+Another way is to have a server side hook script
+that simply exit 0 normally and during release processing
+will exit 1, thereby preventing any commits.
+
+However, hook scripts are for the whole server.
+(Not sure if there is a way to specify hook scripts for a branch only,
+or check in script which branch the commit is being done)
+
+A workaround is to have a client side hook script pointed to a read-only directory.
+The file will be changed when there is a release processing,
+and commit will fail until after the release.
+
+A different script might be needed for each branch the team has.
+
+b.
+How to put a checker before commit?
+Hook scripts are batch files run by subversion during subversion events.
+exit 1 is treated as an error, exit 0 means everything is fine.
+It can be used to check that the log message was not empty,
+or that it conforms to a certain formatting, etc.
+
+
+
+Reference:
+Branching Tips
+http://nedbatchelder.com/text/quicksvnbranch.html

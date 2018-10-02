@@ -1,0 +1,104 @@
+Error:	
+simple jpql SELECT o from MyObject o failing	
+Cause:
+a field in the entity has a column named 20_minutes_delayed_price. SQL Server accepts any column name, but JPA does not allow column names starting with numbers	
+Fix:
+Change datafield to another name that is a valid JPA name
+Only a problem with SQL Server as it allows even a space for field names!
+
+Error:	
+UPDATE Issue i SET i.dueDate = i.dueDate + 10 WHERE i.visit.branch.id = :branchId	
+Cause:
+there is an implicit join between the issue and visit tables. This join would need to be put in a sub-query	
+Fix:
+UPDATE Issue i SET i.dueDate = i.dueDate + 10
+WHERE EXISTS(SELECT 1 FROM Visit v WHERE i.visit = v AND v.branch.id = :branchId)
+Source: http://opensource.atlassian.com/projects/hibernate/browse/HHH-2408
+
+Error:	
+Null value was assigned to a property of primitive type setter of com.link.eps.offer.business.model.jpa.OfferTemplateEntityContributionComponent.blockSizePercentage	
+Cause:
+null value from db cannot set field as 0 int.
+Fix:
+Solution is to use Integer so field can be null
+
+Error:	
+javax.persistence.PersistenceException: org.hibernate.PropertyAccessException: 
+Exception occurred inside getter of com.link.eps.offer.business.model.jpa.OfferInfoEntlDtlEntity.offerValueTypeString
+Even if field is nullable=false.	
+Cause:
+Null safe getter method is needed.
+Thrown during merge.
+Cannot replicate for one entity.
+This scenario has one entity A with many entity B and a new entity B is added.
+Fix:
+FROM
+@Column(name = ""OFFER_VALUE_TYPE"", nullable = false, length = 1)
+String getOfferValueTypeString() {
+ return offerValueType.getCode();
+}
+TO
+@Column(name = ""OFFER_VALUE_TYPE"", nullable = false, length = 1)
+String getOfferValueTypeString() {
+ return offerValueType==null?null:offerValueType.getCode();
+}
+
+Error:
+[TxPolicy] javax.ejb.EJBTransactionRolledbackException: Removing a detached instance com.kristoffer.openejb.model.Company#344	
+Cause:
+object in entityManager.remove(object) is a detached instance	
+Fix:
+instead of
+entityManager.remove(object);
+use
+entityManager.remove(entityManager.merge(object));
+
+Error:
+Company company = new Company();
+company.setCompanyName(""ABS"");
+companyService.add(company);
+Long id = company.getId();
+System.out.print(""id: ""+id);
+id is always null.
+How do we get the id after persist?
+Cause:
+return object
+company = companyService.add(company);
+Long id = company.getId();
+System.out.print(""id: ""+id);	
+
+Error:
+has no local, webservice, or remote interfaces defined and does not implement at least one business interface: 	
+Cause:
+When using EJB3 you MUST implement @Local/@Remote interface. This what you see in the demo is a pure java class, not an ejb. 
+When EJB3.1 is ready you'll no longer be forced to implement interfaces.	
+
+Error:
+Composite Key's not being mapped to column name.	
+Cause:
+the annotation has to be consistent (either annotated fields or annotated methods)
+The key's annotations were in the field, the other classes were in the methods.	
+
+Error:
+OneToMany, tried doing this
+one.getMany().remove(manyObject);
+but the many is not removed.
+Cause:
+session.remove(manyObject);
+should also be called."	
+
+Error:
+SELECT o FROM MyEntity o WHERE (o.type='ACTIVE')) ORDER BY name DESC
+the result list is not ordered correctly.
+Cause:
+When the pair of closing parentheses are corrected to be just one,
+SELECT o FROM MyEntity o WHERE (o.type='ACTIVE') ORDER BY name DESC
+it sorts correctly.
+Thing is, it doesn't throw an exception but failing quietly so hard to figure out.	
+
+Map enum that's not ordinal nor name
+http://stackoverflow.com/questions/2751733/map-enum-in-jpa-with-fixed-values
+
+Enums in NamedQuery.
+Solution: Fully qualified name
+http://stackoverflow.com/questions/8217144/problems-with-making-a-query-when-using-enum-in-entity	

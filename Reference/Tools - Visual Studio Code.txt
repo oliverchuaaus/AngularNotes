@@ -1,0 +1,9 @@
+How to hide node_modules folder?
+https://stackoverflow.com/questions/30140112/how-do-i-hide-certain-files-from-the-sidebar-in-visual-studio-code
+Add to settings.json
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/.*": true,
+        "**/node_modules/": true
+    }

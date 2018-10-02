@@ -1,0 +1,96 @@
+Cannot GET /app/heroes
+Source: https://github.com/johnpapa/angular2-tour-of-heroes/issues/94
+Ordering is important!
+was
+imports: [BrowserModule, FormsModule, InMemoryWebApiModule.forRoot(InMemoryDataService), HttpModule, AppRoutingModule],
+but should be
+imports: [BrowserModule, FormsModule, HttpModule, InMemoryWebApiModule.forRoot(InMemoryDataService), AppRoutingModule],
+
+
+Errors:
+'my-compo' is not a known element:
+Not declared in module
+
+Error: Can't resolve all parameters for MyService
+No @Injectable
+
+Error: Uncaught (in promise): Error: Error in ./MyCompoComponent class MyCompoComponent - inline template:5:5 caused by: Maximum call stack size exceeded
+RangeError: Maximum call stack size exceeded
+recursive call of components
+
+Error: No provider for MyClass
+provider not registered
+MyClass is a param in MyService constructor
+app-compo contains my-compo
+a. providers: [Myservice, MyClass] in any component is fine
+b. my-compo: providers: [MyClass] 
+app-compo: providers: [MyService]
+fails with error: provider not registered
+c. my-compo: providers: [MyService]
+app-compo: providers: [MyClass]
+
+Error: self.context.onSubmit is not a function
+http://stackoverflow.com/questions/39432192/angular-2-on-from-submit-error-self-context-onsubmit-is-not-a-function
+wrong function name
+
+Error:
+Cannot read property 'push' of undefined
+array not initialised
+
+Error:
+Cannot read property 'subscribe' of undefined
+variable in html not matching variable in ng class
+
+Error:
+this.http.get(...).map is not a function
+Solution: import 'rxjs/Rx';
+Source: http://stackoverflow.com/questions/34515173/angular-2-http-get-with-typescript-error-http-get-map-is-not-a-function-in
+
+There is no directive with "exportAs" set to "ngForm" ("
+  <form [ERROR ->]#f="ngForm" (ngSubmit)="submit(f.value)">
+import { FormsModule } from '@angular/forms';
+@NgModule({
+	imports: [BrowserModule, FormsModule],  
+Source: http://stackoverflow.com/questions/38648407/angular2-error-there-is-no-directive-with-exportas-set-to-ngform
+
+
+control.registerOnChange is not a function
+remove #pcode from input tag
+
+Error: Can't resolve all parameters for YoutubeComponent: (?).
+Service missing @Injectable() annotation
+save service in a separate file
+
+Error:this.http.get(...).map is not a function
+Solution: import 'rxjs/Rx';
+Source: http://stackoverflow.com/questions/34515173/angular-2-http-get-with-typescript-error-http-get-map-is-not-a-function-in
+
+
+angular Uncaught TypeError: Cannot read property of null
+{{positionRecord.positionDetails}}
+if positionRecord is null, will throw error.
+use this instead
+{{positionRecord?.positionDetails}}
+
+Disabling radio button disables only first one
+it disables using name, so each option should have unique name.
+https://github.com/angular/angular/issues/13370
+
+
+
+Upload
+http://stackoverflow.com/questions/40214772/file-upload-in-angular-2
+Comment out multipart
+
+Upload multipart
+http://stackoverflow.com/questions/39731066/how-to-upload-filesmultipart-using-angularjs2
+http://stackoverflow.com/questions/36352405/file-upload-with-angular2-to-rest-api
+Integration with REST
+https://github.com/valor-software/ng2-file-upload/issues/651?_pjax=%23js-repo-pjax-container
+
+
+console.log(object) shows [object: Object]
+use console.log(JSON.stringify(object));
+
+
+
